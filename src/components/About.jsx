@@ -5,7 +5,7 @@ export default class About extends Component {
     return (
       <div className='content-section' id='about'>
         <div className='left'>
-          <img src='https://i.ibb.co/8DLW99t/Logo-No-Title.png' alt='Logo with Title' className='full-logo'></img>
+          <img src='https://i.ibb.co/23tM3w6/Logo.png' alt='Logo with Title' className='full-logo'></img>
         </div>
         <div className='right'>
           <div>
