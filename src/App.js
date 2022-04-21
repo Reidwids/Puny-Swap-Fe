@@ -17,7 +17,7 @@ export default class App
         <Router>
           <nav>
             <ul className='nav-bar'>
-              <li className='nav-item'><Link className='nav-link' to="/"><img className='nav-logo' src='https://via.placeholder.com/300.png/09f/fff' alt='Logo'></img></Link></li>
+              <li className='nav-item'><Link className='nav-link' to="/"><img className='nav-logo' src='https://i.ibb.co/8DLW99t/Logo-No-Title.png' alt='Logo'></img></Link></li>
               <li className='nav-item'><Link className='nav-link' to="/market">Market</Link></li>
               <li className='nav-item'><Link className='nav-link' to="/exchange">Exchange</Link></li>
               <li className='nav-item'><Link className='nav-link' to="/bookmarks">Bookmarks</Link></li>
