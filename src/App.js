@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import Axios from 'axios';
 import jwtDecode from 'jwt-decode'
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
+import { Route, Routes, Link, useNavigate} from 'react-router-dom'
 import About from './components/About'
 import Bookmarks from './components/Bookmarks'
 import Exchange from './components/Exchange'
@@ -9,32 +9,111 @@ import Market from './components/Market';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
 
-export default class App
- extends Component {
-  render() {
-    return (
-      <div>
-        <Router>
-          <nav>
-            <ul className='nav-bar'>
-              <li className='nav-item'><Link className='nav-link' to="/"><img className='nav-logo' src='https://i.ibb.co/8DLW99t/Logo-No-Title.png' alt='Logo'></img></Link></li>
-              <li className='nav-item'><Link className='nav-link' to="/market">Market</Link></li>
-              <li className='nav-item'><Link className='nav-link' to="/exchange">Exchange</Link></li>
-              <li className='nav-item'><Link className='nav-link' to="/bookmarks">Bookmarks</Link></li>
-              <li className='nav-item'><Link className='nav-link' to="/signin">Sign In</Link></li>
-              <li className='nav-item'><Link className='nav-link' to="/signup">Sign Up</Link></li>
-            </ul>
-          </nav>
-          <Routes>
-            <Route path="/" element={<About/>}/>
+export default function App(){  
+  
+  const [state, setState] = React.useState({isAuth: false, user: null, message: null});
+  const navigate = useNavigate();
+  
+  useEffect(()=>{
+    let token = localStorage.getItem("token");
+    if(token != null){
+      let user = jwtDecode(token)
+      if(user){
+        setState({...state,
+          isAuth: true,
+          user: user
+        })
+      }
+      else{
+        localStorage.removeItem("token")
+        setState({...state,
+          isAuth: false
+        })
+      }
+    }
+    const clearMessage = setTimeout(() => {
+      setState({
+        ...state,
+        message: ""
+      })
+    }, 3000);
+  }, [state])
+  
+  const registerHandler = (user)=>{
+    Axios.post("auth/signup", user)
+    .then((result) => {
+      if(result.data.message === "User created successfully"){
+        navigate("/signin")
+      }
+      else{
+        setState({...state,
+          message: result.data.message
+        })
+      }
+    }).catch((err) => {
+      console.log(err)
+    });
+  }
+  
+  const loginHandler = (cred)=>{
+    Axios.post("auth/signin", cred)
+    .then((result) => {
+      console.log(result)
+      if(result.data.token){
+        localStorage.setItem("token", result.data.token)
+        let user = jwtDecode(result.data.token)
+        setState({...state,
+          isAuth: true,
+          user: user
+        })
+        navigate("/")
+      }
+      else{
+        setState({...state,
+          message: result.data.message
+        })
+      }
+
+    }).catch((err) => {
+      console.log(err)
+      setState({...state,
+        isAuth: false,
+      })
+    });
+  }
+
+
+  const logoutHandler=(e)=>{
+    e.preventDefault()
+    localStorage.removeItem("token")
+    setState({...state,
+      isAuth: false,
+      user: null
+    })
+  }
+
+  return (
+    <div>
+        <nav>
+          <ul className='nav-bar'>
+            <li className='nav-item'><Link className='nav-link' to="/"><img className='nav-logo' src='https://i.ibb.co/8DLW99t/Logo-No-Title.png' alt='Logo'></img></Link></li>
+            <li className='nav-item'><Link className='nav-link' to="/market">Market</Link></li>
+            <li className='nav-item'><Link className='nav-link' to="/exchange">Exchange</Link></li>
+            <li className='nav-item'><Link className='nav-link' to={state.isAuth?"/bookmarks":"/signin"}>Bookmarks</Link></li>
+            {!state.isAuth?<li className='nav-item'><Link className='nav-link' to="/signin">Sign In</Link></li>:<></>}
+            {!state.isAuth?<li className='nav-item'><Link className='nav-link' to="/signup">Sign Up</Link></li>:<></>}
+            {state.isAuth?<li className='nav-item'><Link className='nav-link' to="/signout" onClick={logoutHandler}>Log Out</Link></li>:<></>}
+          </ul>
+        </nav>
+        <Routes>
             <Route path="/market" element={<Market/>}/>
             <Route path="/exchange" element={<Exchange/>}/>
             <Route path="/bookmarks" element={<Bookmarks/>}/>
-            <Route path="/signin" element={<Signin/>}/>
-            <Route path="/signup" element={<Signup/>}/>
-          </Routes>
-        </Router>
-      </div>
-    )
-  }
+            <Route path="/signin" element={<Signin login={loginHandler}/>}/>
+            <Route path="/signup" element={<Signup message={state.message} register={registerHandler}/>}/>
+            <Route path="/" element={<About/>}/>
+        </Routes>
+        {state.message?<div><h1>{state.message}</h1></div>:<></>}
+    </div>
+  )
 }
