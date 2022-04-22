@@ -14,6 +14,9 @@ export default function App() {
 		isAuth: false,
 		user: null,
 		message: null,
+		coins: null,
+		stats: null,
+		isLoaded: false
 	});
 	const navigate = useNavigate();
 
@@ -28,7 +31,18 @@ export default function App() {
 				setState({ ...state, isAuth: false });
 			}
 		}
-	}, [state]);
+		Axios.get('allCoins')
+		.then((result) => {
+			console.log(result.data.data.coins)
+			setState({...state,
+				coins: result.data.data.coins,
+				stats: result.data.data.stats,
+				isLoaded: true
+			})
+		}).catch((err) => {
+			console.log(err)
+		});
+	}, []);
 
 	const registerHandler = (user) => {
 		Axios.post('auth/signup', user)
@@ -75,6 +89,7 @@ export default function App() {
 	const logoutHandler = (e) => {
 		e.preventDefault();
 		localStorage.removeItem('token');
+		console.log(state.coins)
 		setState({
 			...state,
 			isAuth: false,
@@ -89,6 +104,7 @@ export default function App() {
 	};
 
 	return (
+		<>{state.isLoaded?
 		<div>
 			<nav>
 				<ul className="nav-bar">
@@ -154,7 +170,7 @@ export default function App() {
 				<></>
 			)}
 			<Routes>
-				<Route path="/market" element={<Market />} />
+				<Route path="/market" element={<Market coins={state.coins} stats={state.stats}/>} />
 				<Route path="/exchange" element={<Exchange />} />
 				<Route path="/bookmarks" element={<Bookmarks />} />
 				<Route path="/signin" element={<Signin login={loginHandler} />} />
@@ -167,5 +183,7 @@ export default function App() {
 				<Route path="/" element={<About />} />
 			</Routes>
 		</div>
+		:
+		<></>}</>
 	);
 }
