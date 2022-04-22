@@ -18,7 +18,9 @@ export default class Signup extends Component {
   render() {
     return (
       <div className='content-section'>
-        <form>
+        <form className='auth-form'>
+          <h4>Register</h4>
+          <h6>Join us today!</h6>
           <label>First Name</label>
           <input type="text" name="firstName" onChange={this.changeHandler}></input>
           <label>Last Name</label>

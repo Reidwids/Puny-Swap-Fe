@@ -31,12 +31,6 @@ export default function App(){
         })
       }
     }
-    const clearMessage = setTimeout(() => {
-      setState({
-        ...state,
-        message: ""
-      })
-    }, 3000);
   }, [state])
   
   const registerHandler = (user)=>{
@@ -49,6 +43,11 @@ export default function App(){
         setState({...state,
           message: result.data.message
         })
+        setTimeout(() => {
+          setState({
+            message: ""
+          })
+        }, 3000);
       }
     }).catch((err) => {
       console.log(err)
@@ -58,7 +57,6 @@ export default function App(){
   const loginHandler = (cred)=>{
     Axios.post("auth/signin", cred)
     .then((result) => {
-      console.log(result)
       if(result.data.token){
         localStorage.setItem("token", result.data.token)
         let user = jwtDecode(result.data.token)
@@ -72,6 +70,11 @@ export default function App(){
         setState({...state,
           message: result.data.message
         })
+        setTimeout(() => {
+          setState({
+            message: ""
+          })
+        }, 3000);
       }
 
     }).catch((err) => {
@@ -88,8 +91,14 @@ export default function App(){
     localStorage.removeItem("token")
     setState({...state,
       isAuth: false,
-      user: null
+      user: null,
+      message: "Successfully Logged Out"
     })
+    setTimeout(() => {
+      setState({
+        message: ""
+      })
+    }, 3000);
   }
 
   return (
@@ -105,6 +114,7 @@ export default function App(){
             {state.isAuth?<li className='nav-item'><Link className='nav-link' to="/signout" onClick={logoutHandler}>Log Out</Link></li>:<></>}
           </ul>
         </nav>
+        {state.message?<div className='notification'>{state.message}</div>:<></>}
         <Routes>
             <Route path="/market" element={<Market/>}/>
             <Route path="/exchange" element={<Exchange/>}/>
@@ -113,7 +123,6 @@ export default function App(){
             <Route path="/signup" element={<Signup message={state.message} register={registerHandler}/>}/>
             <Route path="/" element={<About/>}/>
         </Routes>
-        {state.message?<div><h1>{state.message}</h1></div>:<></>}
     </div>
   )
 }

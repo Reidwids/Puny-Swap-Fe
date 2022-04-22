@@ -18,7 +18,9 @@ export default class Signin extends Component {
   render() {
     return (
       <div className='content-section'>
-        <form>
+        <form className='auth-form'>
+          <h4>Log In</h4>
+          <h6>Welcome Back.</h6>
           <label>Email Address</label>
           <input type="email" name="emailAddress" onChange={this.changeHandler}></input>
           <label>Password</label>
