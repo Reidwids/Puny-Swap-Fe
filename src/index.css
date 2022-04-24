@@ -1,226 +1,268 @@
+* {
+	--main-blue: #0f0f44;
+}
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: whitesmoke;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background-color: whitesmoke;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 nav {
-  width: 100%;
-  height: 8vh;
-  position: fixed;
-  background-color: #1f20222d;
+	width: 100%;
+	height: 8vh;
+	position: fixed;
+	background-color: #1f20222d;
 }
 
 .nav-bar {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  margin: 0;
-  padding: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	margin: 0;
+	padding: 0;
 }
 
 .nav-item {
-  list-style-type: none;
-  width: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	list-style-type: none;
+	width: 90%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .nav-link {
-  text-decoration: none;
-  color: #9CA6B8;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	text-decoration: none;
+	color: #9ca6b8;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .nav-logo {
-  height: 5vh;
-  width: auto;
+	height: 5vh;
+	width: auto;
 }
 
-.content-section{
-  display: flex;
-  width: 100%;
-  height: 100vh;
-  padding-top: 8vh;
-  justify-content: center;
-  align-items: center;
+.content-section {
+	display: flex;
+	width: 100%;
+	height: 100vh;
+	padding-top: 8vh;
+	justify-content: center;
+	align-items: center;
 }
 
-#about{
-  display: grid;
-  grid-template-areas: 'left left right';
+#about {
+	display: grid;
+	grid-template-areas: 'left left right';
 }
 
-#about>.left{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  grid-area: left;
+#about > .left {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	grid-area: left;
 }
 
-#about>.right{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  grid-area: right;
+#about > .right {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	grid-area: right;
 }
 
-#about>.right>div{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: column;
-  border-radius: 5px;
-  border: 2px solid black;
-  width: 75%;
-  padding: 25% 10%;
+#about > .right > div {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-direction: column;
+	border-radius: 5px;
+	border: 2px solid black;
+	width: 75%;
+	padding: 25% 10%;
 }
 
-#about>.right>div>*{
-  padding: 0;
-  margin-bottom: 20px;
+#about > .right > div > * {
+	padding: 0;
+	margin-bottom: 20px;
 }
-.btn{
-  font: 10px;
-  text-decoration: none;
-  background-color: #3f3ea5;
-  color: #ffffff;
-  padding: 5px 10px;
-  border: 2px solid black;
-  border-radius: 3px;
-}
-
-.btn:hover{
-  border: 1px solid black;
-  color: black;
+.btn {
+	font: 10px;
+	text-decoration: none;
+	background-color: #3f3ea5;
+	color: #ffffff;
+	padding: 5px 10px;
+	border: 2px solid black;
+	border-radius: 3px;
 }
 
-.full-logo{
-  width: 50%;
-  height: auto;
-}
-.notification{
-  padding-top: 9vh;
-  text-align: center;
-  width: 100%;
-  height: 4vh;
+.btn:hover {
+	border: 1px solid black;
+	color: black;
 }
 
-.market-page{
-  width: 100%;
-  height: 100vh;
-  padding-top: 8vh;
-  display: grid;
-  grid-template-areas:
-  'search search total'
-  'card card total'
-  'card card chart'
-  'card card chart'
-  'card card chart'
-  'card card chart';
+.full-logo {
+	width: 50%;
+	height: auto;
+}
+.notification {
+	padding-top: 9vh;
+	text-align: center;
+	width: 100%;
+	height: 4vh;
 }
 
-.search-container{
-  grid-area: search;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.market-page {
+	width: 100%;
+	height: 100vh;
+	padding-top: 8vh;
+	display: grid;
+	grid-template-areas:
+		'search search total'
+		'card card total'
+		'card card chart'
+		'card card chart'
+		'card card chart'
+		'card card chart';
 }
 
-.card-container{
-  grid-area: card;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.search-container {
+	grid-area: search;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-.totals-container{
-  grid-area: total;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+.card-container {
+	grid-area: card;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-.card-container{
-  grid-area: card;
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap:10px; /* even spacing using grid-gap, You can use percentage values if you want*/
-  padding:10px;
+.totals-container {
+	grid-area: total;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 }
 
-.chart-container{
-  grid-area: chart;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.card-container {
+	grid-area: card;
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 10px; /* even spacing using grid-gap, You can use percentage values if you want*/
+	padding: 10px;
 }
 
-.crypto-card{
-  margin: auto;
-  padding: 10px;
-  display: grid;
-  grid-template-areas:
-  'name name image'
-  'hr hr hr'
-  'price price price'
-  'market market market'
-  'change change change'
-  ;
-  width: 150px;
-  height: 150px;
-  border: 2px solid black;
-  cursor: pointer;
+.chart-container {
+	grid-area: chart;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-.crypto-card>*{
-  margin: 0;
-  padding: 0;
+.crypto-card {
+	margin: auto;
+	padding: 10px;
+	display: grid;
+	grid-template-areas:
+		'name name image'
+		'hr hr hr'
+		'price price price'
+		'market market market'
+		'change change change';
+	width: 150px;
+	height: 150px;
+	border: 2px solid black;
+	cursor: pointer;
 }
 
-.crypto-card>h5{
-  grid-area: name;
+.crypto-card > * {
+	margin: 0;
+	padding: 0;
 }
 
-.crypto-card>img{
-  grid-area: image;
-  width: 15px;
-  height: 15px;
+.crypto-card > h5 {
+	grid-area: name;
 }
 
-.crypto-card>hr{
-  grid-area: hr;
+.crypto-card > img {
+	grid-area: image;
+	width: 15px;
+	height: 15px;
 }
 
-.crypto-card>#price{
-  grid-area: price;
+.crypto-card > hr {
+	grid-area: hr;
 }
 
-.crypto-card>#market{
-  grid-area: market;
+.crypto-card > #price {
+	grid-area: price;
 }
 
-.crypto-card>#change{
-  grid-area: change;
+.crypto-card > #market {
+	grid-area: market;
 }
 
-.crypto-card>p{
-  font-size: small;
+.crypto-card > #change {
+	grid-area: change;
+}
+
+.crypto-card > p {
+	font-size: small;
+}
+
+/* Exchange */
+#exchange_cont {
+	margin-top: 20%;
+}
+
+.exchange_filters {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+}
+.exchange_filter {
+	flex-basis: 50%;
+	flex-grow: 1;
+	background-color: #ccc;
+	color: rgb(112, 112, 112);
+	text-align: center;
+	font-size: 0.75em;
+	padding: 0.5em;
+	margin: 0 0 0.1em;
+	letter-spacing: 0.3em;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+.exchange_filter:hover {
+	background-color: hsl(0, 0%, 36%);
+	color: white;
+}
+
+.exchange_filter.is-active {
+	background-color: var(--main-blue);
+	color: white;
+}
+
+.exchange_button {
+	background-color: var(--main-blue);
+	width: 100%;
+	color: white;
+}
+.exchange_button:hover {
+	border: 2px solid black;
+	color: white;
 }

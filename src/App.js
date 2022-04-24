@@ -4,7 +4,7 @@ import jwtDecode from 'jwt-decode';
 import { Route, Routes, Link, useNavigate } from 'react-router-dom';
 import { About } from './components/About';
 import Bookmarks from './components/Bookmarks';
-import Exchange from './components/Exchange';
+import { Exchange } from './components/Exchange/Exchange';
 import Market from './components/Market';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
@@ -16,7 +16,7 @@ export default function App() {
 		message: null,
 		coins: null,
 		stats: null,
-		isLoaded: false
+		isLoaded: false,
 	});
 	const navigate = useNavigate();
 
@@ -32,16 +32,18 @@ export default function App() {
 			}
 		}
 		Axios.get('allCoins')
-		.then((result) => {
-			console.log(result.data.data.coins)
-			setState({...state,
-				coins: result.data.data.coins,
-				stats: result.data.data.stats,
-				isLoaded: true
+			.then((result) => {
+				console.log(result.data.data.coins);
+				setState({
+					...state,
+					coins: result.data.data.coins,
+					stats: result.data.data.stats,
+					isLoaded: true,
+				});
 			})
-		}).catch((err) => {
-			console.log(err)
-		});
+			.catch((err) => {
+				console.log(err);
+			});
 	}, []);
 
 	const registerHandler = (user) => {
@@ -89,7 +91,7 @@ export default function App() {
 	const logoutHandler = (e) => {
 		e.preventDefault();
 		localStorage.removeItem('token');
-		console.log(state.coins)
+		console.log(state.coins);
 		setState({
 			...state,
 			isAuth: false,
@@ -104,86 +106,73 @@ export default function App() {
 	};
 
 	return (
-		<>{state.isLoaded?
-		<div>
-			<nav>
-				<ul className="nav-bar">
-					<li className="nav-item">
-						<Link className="nav-link" to="/">
-							<img
-								className="nav-logo"
-								src="https://i.ibb.co/8DLW99t/Logo-No-Title.png"
-								alt="Logo"
-							></img>
-						</Link>
-					</li>
-					<li className="nav-item">
-						<Link className="nav-link" to="/market">
-							Market
-						</Link>
-					</li>
-					<li className="nav-item">
-						<Link className="nav-link" to="/exchange">
-							Exchange
-						</Link>
-					</li>
-					<li className="nav-item">
-						<Link
-							className="nav-link"
-							to={state.isAuth ? '/bookmarks' : '/signin'}
-						>
-							Bookmarks
-						</Link>
-					</li>
-					{!state.isAuth ? (
-						<li className="nav-item">
-							<Link className="nav-link" to="/signin">
-								Sign In
-							</Link>
-						</li>
-					) : (
-						<></>
-					)}
-					{!state.isAuth ? (
-						<li className="nav-item">
-							<Link className="nav-link" to="/signup">
-								Sign Up
-							</Link>
-						</li>
-					) : (
-						<></>
-					)}
-					{state.isAuth ? (
-						<li className="nav-item">
-							<Link className="nav-link" to="/signout" onClick={logoutHandler}>
-								Log Out
-							</Link>
-						</li>
-					) : (
-						<></>
-					)}
-				</ul>
-			</nav>
-			{state.message ? (
-				<div className="notification">{state.message}</div>
+		<>
+			{state.isLoaded ? (
+				<div>
+					<nav>
+						<ul className="nav-bar">
+							<li className="nav-item">
+								<Link className="nav-link" to="/">
+									<img className="nav-logo" src="https://i.ibb.co/8DLW99t/Logo-No-Title.png" alt="Logo"></img>
+								</Link>
+							</li>
+							<li className="nav-item">
+								<Link className="nav-link" to="/market">
+									Market
+								</Link>
+							</li>
+							<li className="nav-item">
+								<Link className="nav-link" to="/exchange">
+									Exchange
+								</Link>
+							</li>
+							<li className="nav-item">
+								<Link className="nav-link" to={state.isAuth ? '/bookmarks' : '/signin'}>
+									Bookmarks
+								</Link>
+							</li>
+							{!state.isAuth ? (
+								<li className="nav-item">
+									<Link className="nav-link" to="/signin">
+										Sign In
+									</Link>
+								</li>
+							) : (
+								<></>
+							)}
+							{!state.isAuth ? (
+								<li className="nav-item">
+									<Link className="nav-link" to="/signup">
+										Sign Up
+									</Link>
+								</li>
+							) : (
+								<></>
+							)}
+							{state.isAuth ? (
+								<li className="nav-item">
+									<Link className="nav-link" to="/signout" onClick={logoutHandler}>
+										Log Out
+									</Link>
+								</li>
+							) : (
+								<></>
+							)}
+						</ul>
+					</nav>
+					{state.message ? <div className="notification">{state.message}</div> : <></>}
+					<Routes>
+						<Route path="/market" element={<Market coins={state.coins} stats={state.stats} />} />
+						<Route path="/exchange" element={<Exchange />} />
+						<Route path="/bookmarks" element={<Bookmarks />} />
+						<Route path="/signin" element={<Signin login={loginHandler} />} />
+						<Route path="/signup" element={<Signup message={state.message} register={registerHandler} />} />
+						<Route path="/" element={<About />} />
+					</Routes>
+				</div>
 			) : (
 				<></>
 			)}
-			<Routes>
-				<Route path="/market" element={<Market coins={state.coins} stats={state.stats}/>} />
-				<Route path="/exchange" element={<Exchange />} />
-				<Route path="/bookmarks" element={<Bookmarks />} />
-				<Route path="/signin" element={<Signin login={loginHandler} />} />
-				<Route
-					path="/signup"
-					element={
-						<Signup message={state.message} register={registerHandler} />
-					}
-				/>
-				<Route path="/" element={<About />} />
-			</Routes>
-		</div>
-		:
-		<></>}</>
+		</>
 	);
 }
