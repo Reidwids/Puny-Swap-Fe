@@ -33,7 +33,6 @@ export default function App() {
 		}
 		Axios.get('allCoins')
 		.then((result) => {
-			console.log(result.data.data.coins)
 			setState({...state,
 				coins: result.data.data.coins,
 				stats: result.data.data.stats,
@@ -102,10 +101,9 @@ export default function App() {
 			});
 		}, 3000);
 	};
-
 	return (
 		<>{state.isLoaded?
-		<div>
+			<div>
 			<nav>
 				<ul className="nav-bar">
 					<li className="nav-item">
