@@ -19,7 +19,7 @@ export const TransactionProvider = ({ children }) => {
 	const [currentAccount, setCurrentAccount] = useState('');
 	const [formData, setFormData] = useState({ addressTo: '', amount: '', keyword: '', message: '' });
 	const [isLoading, setIsLoading] = useState(false);
-	const [transactionCount, setTransactionCount] = useState(localStorage.getItem('transactionCount'));
+	// const [transactionCount, setTransactionCount] = useState(localStorage.getItem('transactionCount'));
 
 	const handleChange = (e, name) => {
 		setFormData((prevState) => ({ ...prevState, [name]: e.target.value }));
@@ -60,6 +60,7 @@ export const TransactionProvider = ({ children }) => {
 			const { addressTo, amount, keyword, message } = formData;
 			const transactionContract = getEthereumContract();
 			console.log(formData);
+			console.log(ethereum);
 			//Parse decimal amount into a hexidecimal amount to send over network
 			const parsedAmount = ethers.utils.parseEther(amount);
 
@@ -84,9 +85,10 @@ export const TransactionProvider = ({ children }) => {
 			await transactionHash.wait();
 			setIsLoading(false);
 			console.log(`Success - ${transactionHash.hash}`);
+			alert('Eth sent successfully!');
 
-			const transactionCount = await transactionContract.getTransactionCount();
-			setTransactionCount(transactionCount.toNumber());
+			// const transactionCount = await transactionContract.getTransactionCount();
+			// setTransactionCount(transactionCount.toNumber());
 		} catch (error) {
 			console.log(error);
 			throw new Error('No ethereum object');

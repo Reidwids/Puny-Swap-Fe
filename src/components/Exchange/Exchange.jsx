@@ -4,7 +4,7 @@ import { Container, Form, Button } from 'react-bootstrap';
 import Swap from './Swap';
 import Send from './Send';
 
-export function Exchange() {
+export function Exchange(props) {
 	const [filter, setFilter] = useState('send');
 	const { sendTransaction, connectWallet, currentAccount, formData, handleChange, setFormData } = useContext(TransactionContext);
 
@@ -24,7 +24,7 @@ export function Exchange() {
 						Swap Crypto
 					</div>
 				</div>
-				{filter === 'send' ? <Send></Send> : <Swap></Swap>}
+				{filter === 'send' ? <Send></Send> : <Swap isLoaded={props.isLoaded}></Swap>}
 			</Container>
 			{!currentAccount && (
 				<Button className="exchange_button" onClick={connectWallet}>
