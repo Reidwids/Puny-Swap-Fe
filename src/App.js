@@ -31,19 +31,11 @@ export default function App() {
 				setState({ ...state, isAuth: false });
 			}
 		}
-		Axios.get('allCoins')
-			.then((result) => {
-				console.log(result.data.data.coins);
-				setState({
-					...state,
-					coins: result.data.data.coins,
-					stats: result.data.data.stats,
-					isLoaded: true,
-				});
-			})
-			.catch((err) => {
+		Axios.get('allCoins').then((result) => {
+			setState({ ...state, coins: result.data.data.coins, stats: result.data.data.stats, isLoaded: true }).catch((err) => {
 				console.log(err);
 			});
+		});
 	}, []);
 
 	const registerHandler = (user) => {
@@ -104,7 +96,6 @@ export default function App() {
 			});
 		}, 3000);
 	};
-
 	return (
 		<>
 			{state.isLoaded ? (
