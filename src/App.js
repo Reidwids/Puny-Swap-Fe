@@ -33,7 +33,6 @@ export default function App() {
 		}
 		Axios.get('allCoins')
 			.then((result) => {
-				console.log(result.data.data.coins);
 				setState({
 					...state,
 					coins: result.data.data.coins,
@@ -163,7 +162,7 @@ export default function App() {
 					{state.message ? <div className="notification">{state.message}</div> : <></>}
 					<Routes>
 						<Route path="/market" element={<Market coins={state.coins} stats={state.stats} />} />
-						<Route path="/exchange" element={<Exchange />} />
+						<Route path="/exchange" isLoaded={state.isLoaded} element={<Exchange />} />
 						<Route path="/bookmarks" element={<Bookmarks />} />
 						<Route path="/signin" element={<Signin login={loginHandler} />} />
 						<Route path="/signup" element={<Signup message={state.message} register={registerHandler} />} />

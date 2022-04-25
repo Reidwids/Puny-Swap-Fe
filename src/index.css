@@ -224,7 +224,9 @@ nav {
 	font-size: small;
 }
 
-/* Exchange */
+/*-- Exchange --*/
+
+/* Send eth */
 #exchange_cont {
 	margin-top: 20%;
 }
@@ -246,6 +248,7 @@ nav {
 	letter-spacing: 0.3em;
 	text-transform: uppercase;
 	cursor: pointer;
+	border-radius: 15px;
 }
 .exchange_filter:hover {
 	background-color: hsl(0, 0%, 36%);
@@ -265,4 +268,48 @@ nav {
 .exchange_button:hover {
 	border: 2px solid black;
 	color: white;
+}
+
+/* Swap Crypto */
+
+.swapbox_select {
+	width: 50%;
+	float: left;
+}
+#swap_form {
+	padding: 20px;
+}
+.swapbox {
+	overflow: auto;
+	background-color: gray;
+	border: 1px solid #565656;
+	border-radius: 5px;
+	width: 100%;
+}
+
+.token_select {
+	padding: 5px;
+}
+.token_select:hover {
+	background-color: rgb(85, 85, 85);
+	cursor: pointer;
+}
+
+.token_list_img {
+	width: 40px;
+}
+.modal_body {
+	height: 600px;
+	overflow: scroll;
+}
+.token_row {
+	padding: 5px 10px;
+}
+.token_row:hover {
+	background-color: gray;
+	cursor: pointer;
+}
+
+.token_image {
+	width: 40px;
 }

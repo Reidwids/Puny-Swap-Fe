@@ -11,18 +11,14 @@ export default function Send() {
 	};
 	return (
 		<div id="send_form">
-			<Form.Group>
-				<Form.Control required name="addressTo" placeholder="Address To" onChange={(e) => handleChange(e, 'addressTo')}></Form.Control>
-			</Form.Group>
-			<Form.Group>
-				<Form.Control required name="amount" placeholder="Amount (Eth)" onChange={(e) => handleChange(e, 'amount')}></Form.Control>
-			</Form.Group>
-			<Form.Group>
-				<Form.Control required name="keyword" placeholder="Keyword (Gif)" onChange={(e) => handleChange(e, 'keyword')}></Form.Control>
-			</Form.Group>
-			<Form.Group>
-				<Form.Control required name="message" placeholder="Message" onChange={(e) => handleChange(e, 'message')}></Form.Control>
-			</Form.Group>
+			<Form.Control required name="addressTo" placeholder="Address To" onChange={(e) => handleChange(e, 'addressTo')}></Form.Control>
+
+			<Form.Control required name="amount" placeholder="Amount (Eth)" onChange={(e) => handleChange(e, 'amount')}></Form.Control>
+
+			<Form.Control required name="keyword" placeholder="Keyword (Gif)" onChange={(e) => handleChange(e, 'keyword')}></Form.Control>
+
+			<Form.Control required name="message" placeholder="Message" onChange={(e) => handleChange(e, 'message')}></Form.Control>
+
 			<Button className="exchange_button" onClick={handleSubmit}>
 				Send
 			</Button>
