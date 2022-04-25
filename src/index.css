@@ -287,6 +287,10 @@ nav {
 	width: 100%;
 }
 
+.modal_body {
+	height: 400px;
+	overflow: scroll;
+}
 .token_select {
 	padding: 5px;
 }
@@ -294,13 +298,8 @@ nav {
 	background-color: rgb(85, 85, 85);
 	cursor: pointer;
 }
-
 .token_list_img {
 	width: 30px;
-}
-.modal_body {
-	height: 600px;
-	overflow: scroll;
 }
 .token_row {
 	padding: 5px 10px;

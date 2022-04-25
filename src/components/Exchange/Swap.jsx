@@ -1,6 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { TransactionContext } from '../../context/TransactionContext';
-import { Container, Form, Button } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Form, Button } from 'react-bootstrap';
 import Moralis from 'moralis';
 import CoinRow from './CoinRow';
 
@@ -17,9 +16,12 @@ export default function Swap(props) {
 	const [initialized, setInitialized] = useState(false);
 	// let allTokens;
 	const [allTokens, setAllTokens] = useState();
+	const [displayTokens, setDisplayTokens] = useState();
 	const [tokensObj, setTokensObj] = useState();
+	const [tokensArr, setTokensArr] = useState();
 	const [toAmount, setToAmount] = useState('');
 	const [gasEstimate, setGasEstimate] = useState('');
+	const [search, setSearch] = useState();
 
 	async function login() {
 		//fix login so we don't have to login every time we visit page
@@ -28,23 +30,24 @@ export default function Swap(props) {
 			try {
 				setUser(await Moralis.authenticate());
 				//Change below to remove disabled when logged into metamask
-				document.getElementById('swap_button').disabled = false;
+				// document.getElementById('swap_button').disabled = false;
+				console.log('Logged in');
 			} catch (error) {
 				console.log(error);
 			}
 		}
 	}
-	async function logOut() {
-		await Moralis.User.logOut();
-		console.log('logged out');
-	}
+	// async function logOut() {
+	// 	await Moralis.User.logOut();
+	// 	console.log('logged out');
+	// }
 	async function listAvailableTokens() {
 		try {
 			const result = await Moralis.Plugins.oneInch.getSupportedTokens({
 				chain: 'eth',
 				// The blockchain you want to use (eth/bsc/polygon)
 			});
-
+			setTokensArr(Object.entries(result.tokens));
 			setTokensObj(result.tokens);
 		} catch (error) {
 			console.log(error);
@@ -52,32 +55,37 @@ export default function Swap(props) {
 	}
 	function selectToken(address, side) {
 		closeModal();
-		console.log('Current side: ', side);
 		if (side === 'from') {
 			setCurrentTradeFrom(tokensObj[address]);
 		}
 		if (side === 'to') {
 			setCurrentTradeTo(tokensObj[address]);
-			console.log(side);
 		}
 		//May be required
 		// getQuote();
 	}
 	function openModal(side) {
 		const tempTokens = Object.entries(tokensObj);
-		setAllTokens(
+		setDisplayTokens(
 			tempTokens.map((token, i) => {
 				return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
 			})
 		);
 		setTokenModal('block');
 	}
+	function searchChange(e, side) {
+		setSearch(e.target.value);
+		setDisplayTokens(
+			tempTokens.map((token, i) => {
+				return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
+			})
+		);
+	}
 	function closeModal() {
 		setTokenModal('none');
 	}
 	async function getQuote(e) {
 		if (!currentTradeFrom || !currentTradeTo) return;
-		console.log(e.target.value);
 		let amount = Number(e.target.value * 10 ** currentTradeFrom.decimals);
 		const quote = await Moralis.Plugins.oneInch.quote({
 			chain: 'eth',
@@ -89,7 +97,7 @@ export default function Swap(props) {
 			amount: amount,
 		});
 		console.log(quote);
-		setGasEstimate(quote.estimatedGas);
+		setGasEstimate((quote.estimatedGas * 0.000000000905).toFixed(6));
 		setToAmount(quote.toTokenAmount / 10 ** quote.toToken.decimals);
 	}
 	async function init() {
@@ -122,7 +130,6 @@ export default function Swap(props) {
 				// Your wallet address
 				amount: amount,
 			});
-			console.log('allowance');
 			console.log(allowance);
 			if (!allowance) {
 				await Moralis.Plugins.oneInch.approve({
@@ -135,10 +142,10 @@ export default function Swap(props) {
 				});
 			}
 		}
+		console.log(currentTradeFrom);
 		console.log(amount);
 		console.log(address);
 		await doSwap(address, amount);
-		alert('Swap Complete');
 	}
 
 	async function doSwap(userAddress, amount) {
@@ -158,6 +165,7 @@ export default function Swap(props) {
 			});
 		} catch (error) {
 			console.log(error);
+			alert('Swap Failed');
 		}
 	}
 
@@ -191,23 +199,23 @@ export default function Swap(props) {
 				<div id="swap_gas">
 					{gasEstimate ? (
 						<div>
-							Estimated Gas: <span id="gas_estimate">{gasEstimate}</span> Eth{' '}
+							Fees: <span id="gas_estimate">{gasEstimate}</span> Eth{' '}
 						</div>
 					) : (
 						<div></div>
 					)}
 				</div>
 				{/* <!-- Make button below disabled when not logged in --> */}
-				<Button className="exchange_button" id="swap_button" onClick={trySwap}>
-					Swap
+				<Button className="exchange_button" id="swap_button" onClick={user ? trySwap : login}>
+					{user ? 'Swap' : 'Moralis Login'}
 				</Button>
 			</div>
-			<button id="btn-login" onClick={login}>
+			{/* <button id="btn-login" onClick={login}>
 				Moralis Metamask Login
 			</button>
 			<button id="btn-logout" onClick={logOut}>
 				Logout
-			</button>
+			</button> */}
 			<div className="modal" id="token_modal" tabIndex="-1" role="dialog" style={{ display: tokenModal }}>
 				<div className="modal-dialog" role="document">
 					<div className="modal-content">
@@ -218,6 +226,7 @@ export default function Swap(props) {
 							</button>
 						</div>
 						<div className="modal_body">
+							<Form.Control className=" form-control" placeholder="search" id="search" onChange={(e) => searchChange(e)}></Form.Control>
 							<div id="token_list">{allTokens}</div>
 						</div>
 					</div>

@@ -3,7 +3,8 @@ import { TransactionContext } from '../../context/TransactionContext';
 import { Container, Form, Button } from 'react-bootstrap';
 
 export default function Send() {
-	const { sendTransaction, connectWallet, currentAccount, formData, handleChange, setFormData } = useContext(TransactionContext);
+	// const { sendTransaction, connectWallet, currentAccount, formData, handleChange, setFormData } = useContext(TransactionContext);
+	const { sendTransaction, formData, handleChange } = useContext(TransactionContext);
 	const handleSubmit = (e) => {
 		// const {addressTo, amount, keyword, message} = formData;
 		e.preventDefault();
