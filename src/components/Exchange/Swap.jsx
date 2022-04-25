@@ -10,15 +10,16 @@ export default function Swap(props) {
 	// const appId = process.env.moralisID;
 	const appId = 'A1ke09rT3uacaTObuqpOhW407Gl4ZBhGnhgnZ6dd';
 	const [user, setUser] = useState();
-	const [currentTrade, setCurrentTrade] = useState({});
-	const [currentSelectSide, setCurrentSelectSide] = useState();
-	// let [tokens, setTokens] = useState();
-	const [tokens, setTokens] = useState({});
+	// const [currentTrade, setCurrentTrade] = useState({});
 	const [tokenModal, setTokenModal] = useState('none');
 	const [currentTradeFrom, setCurrentTradeFrom] = useState([]);
 	const [currentTradeTo, setCurrentTradeTo] = useState([]);
 	const [initialized, setInitialized] = useState(false);
-	let allTokens;
+	// let allTokens;
+	const [allTokens, setAllTokens] = useState();
+	const [tokensObj, setTokensObj] = useState();
+	const [toAmount, setToAmount] = useState('');
+	const [gasEstimate, setGasEstimate] = useState('');
 
 	async function login() {
 		//fix login so we don't have to login every time we visit page
@@ -43,32 +44,53 @@ export default function Swap(props) {
 				chain: 'eth',
 				// The blockchain you want to use (eth/bsc/polygon)
 			});
-			console.log(result.tokens);
-			setTokens({ ...result.tokens });
+
+			setTokensObj(result.tokens);
 		} catch (error) {
 			console.log(error);
 		}
-		console.log(tokens);
-		// tokens = result.tokens;
 	}
-	function selectToken(address) {
+	function selectToken(address, side) {
 		closeModal();
-		setCurrentSelectSide(tokens[address]);
-		if (currentTrade.from) {
-			setCurrentTradeFrom([currentTrade.from.logoURI, currentTrade.from.symbol]);
+		console.log('Current side: ', side);
+		if (side === 'from') {
+			setCurrentTradeFrom(tokensObj[address]);
 		}
-		if (currentTrade.to) {
-			setCurrentTradeTo([currentTrade.to.logoURI, currentTrade.to.symbol]);
+		if (side === 'to') {
+			setCurrentTradeTo(tokensObj[address]);
+			console.log(side);
 		}
 		//May be required
 		// getQuote();
 	}
 	function openModal(side) {
-		setCurrentSelectSide(side);
+		const tempTokens = Object.entries(tokensObj);
+		setAllTokens(
+			tempTokens.map((token, i) => {
+				return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
+			})
+		);
 		setTokenModal('block');
 	}
 	function closeModal() {
 		setTokenModal('none');
+	}
+	async function getQuote(e) {
+		if (!currentTradeFrom || !currentTradeTo) return;
+		console.log(e.target.value);
+		let amount = Number(e.target.value * 10 ** currentTradeFrom.decimals);
+		const quote = await Moralis.Plugins.oneInch.quote({
+			chain: 'eth',
+			// The blockchain you want to use (eth/bsc/polygon)
+			fromTokenAddress: currentTradeFrom.address,
+			// The token you want to swap
+			toTokenAddress: currentTradeTo.address,
+			// The token you want to receive
+			amount: amount,
+		});
+		console.log(quote);
+		setGasEstimate(quote.estimatedGas);
+		setToAmount(quote.toTokenAmount / 10 ** quote.toToken.decimals);
 	}
 	async function init() {
 		if (!initialized) {
@@ -87,38 +109,96 @@ export default function Swap(props) {
 			}
 		}
 	}
+	async function trySwap() {
+		let address = Moralis.User.current().get('ethAddress');
+		let amount = Number(document.getElementById('from_amount').value * 10 ** currentTradeFrom.decimals);
+		if (currentTradeFrom.symbol !== 'ETH') {
+			const allowance = await Moralis.Plugins.oneInch.hasAllowance({
+				chain: 'eth',
+				// The blockchain you want to use (eth/bsc/polygon)
+				fromTokenAddress: currentTradeFrom.address,
+				// The token you want to swap
+				fromAddress: address,
+				// Your wallet address
+				amount: amount,
+			});
+			console.log('allowance');
+			console.log(allowance);
+			if (!allowance) {
+				await Moralis.Plugins.oneInch.approve({
+					chain: 'eth',
+					// The blockchain you want to use (eth/bsc/polygon)
+					tokenAddress: currentTradeFrom.address,
+					// The token you want to swap
+					fromAddress: address,
+					// Your wallet address
+				});
+			}
+		}
+		console.log(amount);
+		console.log(address);
+		await doSwap(address, amount);
+		alert('Swap Complete');
+	}
+
+	async function doSwap(userAddress, amount) {
+		console.log('before swap');
+		try {
+			return await Moralis.Plugins.oneInch.swap({
+				chain: 'eth',
+				// The blockchain you want to use (eth/bsc/polygon)
+				fromTokenAddress: currentTradeFrom.address,
+				// The token you want to swap
+				toTokenAddress: currentTradeTo.address,
+				// The token you want to receive
+				amount: amount,
+				fromAddress: userAddress,
+				// Your wallet address
+				slippage: 1,
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
 	useEffect(() => {
 		init();
 	});
-
+	function toAmountChange() {
+		console.log('Changing toAmount..');
+	}
 	return (
 		<div id="swap">
 			<div id="swap_form">
 				<div className="swapbox">
 					<div className="swapbox_select token_select" id="from_token_select" onClick={() => openModal('from')}>
-						<img className="token_image" id="from_token_img" src={currentTradeTo[0]} />
-						<span id="from_token_text">{currentTradeTo[1]}</span>
+						<img className="token_image" id="from_token_img" src={currentTradeFrom.logoURI} />
+						<span id="from_token_text">{currentTradeFrom.symbol}</span>
 					</div>
 					<div className="swapbox_select">
-						<Form.Control required className="number form-control" placeholder="Amount" id="from_amount"></Form.Control>
-						{/* <Form.Control required className="number form-control" placeholder="Amount" id="from_amount" onBlur={getQuote}></Form.Control> */}
+						<Form.Control required className="number form-control" placeholder="Amount" id="from_amount" onBlur={(e) => getQuote(e)}></Form.Control>
 					</div>
 				</div>
 				<div className="swapbox">
 					<div className="swapbox_select token_select" id="to_token_select" onClick={() => openModal('to')}>
-						<img className="token_image" id="to_token_img" src={currentTradeTo[0]} />
-						<span id="to_token_text">{currentTradeTo[1]}</span>
+						<img className="token_image" id="to_token_img" src={currentTradeTo.logoURI} />
+						<span id="to_token_text">{currentTradeTo.symbol}</span>
 					</div>
 					<div className="swapbox_select">
-						<Form.Control required className="number form-control" placeholder="Amount" id="to_amount"></Form.Control>
+						<Form.Control required className="number form-control" placeholder="Amount" id="to_amount" value={toAmount} onChange={toAmountChange}></Form.Control>
 					</div>
 				</div>
 				<div id="swap_gas">
-					Estimated Gas: <span id="gas_estimate"></span> Eth
+					{gasEstimate ? (
+						<div>
+							Estimated Gas: <span id="gas_estimate">{gasEstimate}</span> Eth{' '}
+						</div>
+					) : (
+						<div></div>
+					)}
 				</div>
 				{/* <!-- Make button below disabled when not logged in --> */}
-				{/* <Button className="exchange_button" id="swap_button" onClick={trySwap}> */}
-				<Button className="exchange_button" id="swap_button">
+				<Button className="exchange_button" id="swap_button" onClick={trySwap}>
 					Swap
 				</Button>
 			</div>
