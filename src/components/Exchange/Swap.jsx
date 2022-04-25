@@ -22,6 +22,8 @@ export default function Swap(props) {
 	const [toAmount, setToAmount] = useState('');
 	const [gasEstimate, setGasEstimate] = useState('');
 	const [search, setSearch] = useState();
+	const [side, setSide] = useState();
+	const [chainFilter, setChainFilter] = useState('eth');
 
 	async function login() {
 		//fix login so we don't have to login every time we visit page
@@ -44,7 +46,7 @@ export default function Swap(props) {
 	async function listAvailableTokens() {
 		try {
 			const result = await Moralis.Plugins.oneInch.getSupportedTokens({
-				chain: 'eth',
+				chain: chainFilter,
 				// The blockchain you want to use (eth/bsc/polygon)
 			});
 			setTokensArr(Object.entries(result.tokens));
@@ -64,31 +66,35 @@ export default function Swap(props) {
 		//May be required
 		// getQuote();
 	}
-	function openModal(side) {
+	function openModal(tempSide) {
+		setSide(tempSide);
 		const tempTokens = Object.entries(tokensObj);
 		setDisplayTokens(
 			tempTokens.map((token, i) => {
 				return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
 			})
 		);
+		console.log(displayTokens);
 		setTokenModal('block');
 	}
-	function searchChange(e, side) {
-		setSearch(e.target.value);
+	function searchChange(e) {
 		setDisplayTokens(
-			tempTokens.map((token, i) => {
-				return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
-			})
+			tokensArr
+				.filter((token) => token[1].symbol.toLowerCase().includes(e.target.value))
+				.map((token, i) => {
+					return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
+				})
 		);
 	}
 	function closeModal() {
+		document.getElementById('searchModal').value = '';
 		setTokenModal('none');
 	}
 	async function getQuote(e) {
 		if (!currentTradeFrom || !currentTradeTo) return;
 		let amount = Number(e.target.value * 10 ** currentTradeFrom.decimals);
 		const quote = await Moralis.Plugins.oneInch.quote({
-			chain: 'eth',
+			chain: chainFilter,
 			// The blockchain you want to use (eth/bsc/polygon)
 			fromTokenAddress: currentTradeFrom.address,
 			// The token you want to swap
@@ -122,7 +128,7 @@ export default function Swap(props) {
 		let amount = Number(document.getElementById('from_amount').value * 10 ** currentTradeFrom.decimals);
 		if (currentTradeFrom.symbol !== 'ETH') {
 			const allowance = await Moralis.Plugins.oneInch.hasAllowance({
-				chain: 'eth',
+				chain: chainFilter,
 				// The blockchain you want to use (eth/bsc/polygon)
 				fromTokenAddress: currentTradeFrom.address,
 				// The token you want to swap
@@ -133,7 +139,7 @@ export default function Swap(props) {
 			console.log(allowance);
 			if (!allowance) {
 				await Moralis.Plugins.oneInch.approve({
-					chain: 'eth',
+					chain: chainFilter,
 					// The blockchain you want to use (eth/bsc/polygon)
 					tokenAddress: currentTradeFrom.address,
 					// The token you want to swap
@@ -152,7 +158,7 @@ export default function Swap(props) {
 		console.log('before swap');
 		try {
 			return await Moralis.Plugins.oneInch.swap({
-				chain: 'eth',
+				chain: chainFilter,
 				// The blockchain you want to use (eth/bsc/polygon)
 				fromTokenAddress: currentTradeFrom.address,
 				// The token you want to swap
@@ -172,12 +178,35 @@ export default function Swap(props) {
 	useEffect(() => {
 		init();
 	});
+	// useEffect(() => {
+	// 	console.log(displayTokens);
+	// }, [displayTokens]);
+
 	function toAmountChange() {
 		console.log('Changing toAmount..');
+	}
+	function handleChainFilter(chain) {
+		setChainFilter(chain);
 	}
 	return (
 		<div id="swap">
 			<div id="swap_form">
+				<div className="chain_filters">
+					<div className="exchange_filters">
+						<div onClick={() => handleChainFilter('eth')} className={chainFilter === 'eth' ? 'exchange_filter is-active' : 'exchange_filter'}>
+							Eth
+						</div>
+						<div onClick={() => handleChainFilter('bsc')} className={chainFilter === 'bsc' ? 'exchange_filter is-active' : 'exchange_filter'}>
+							Bsc
+						</div>
+						<div onClick={() => handleChainFilter('polygon')} className={chainFilter === 'polygon' ? 'exchange_filter is-active' : 'exchange_filter'}>
+							Ply
+						</div>
+						<div onClick={() => handleChainFilter('avalanche')} className={chainFilter === 'avalanche' ? 'exchange_filter is-active' : 'exchange_filter'}>
+							Avl
+						</div>
+					</div>
+				</div>
 				<div className="swapbox">
 					<div className="swapbox_select token_select" id="from_token_select" onClick={() => openModal('from')}>
 						<img className="token_image" id="from_token_img" src={currentTradeFrom.logoURI} />
@@ -226,8 +255,8 @@ export default function Swap(props) {
 							</button>
 						</div>
 						<div className="modal_body">
-							<Form.Control className=" form-control" placeholder="search" id="search" onChange={(e) => searchChange(e)}></Form.Control>
-							<div id="token_list">{allTokens}</div>
+							<Form.Control className=" form-control" placeholder="Search" id="searchModal" onChange={(e) => searchChange(e)}></Form.Control>
+							<div id="token_list">{displayTokens}</div>
 						</div>
 					</div>
 				</div>

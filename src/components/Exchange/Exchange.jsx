@@ -9,7 +9,6 @@ export function Exchange(props) {
 	const { sendTransaction, connectWallet, currentAccount, formData, handleChange, setFormData } = useContext(TransactionContext);
 
 	const handleFilterClick = (filter) => {
-		console.log(`Filter is ${filter}`);
 		setFilter(filter);
 	};
 
