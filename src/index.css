@@ -287,6 +287,9 @@ nav {
 #swap_form {
 	padding: 20px;
 }
+.chain_filters {
+	margin-bottom: 10px;
+}
 .swapbox {
 	overflow: auto;
 	background-color: gray;
@@ -294,7 +297,6 @@ nav {
 	border-radius: 5px;
 	width: 100%;
 }
-
 .modal_body {
 	height: 400px;
 	overflow: scroll;
@@ -316,7 +318,6 @@ nav {
 	background-color: gray;
 	cursor: pointer;
 }
-
 .token_image {
 	width: 40px;
 }
