@@ -13,7 +13,7 @@ export default function Swap(props) {
 	const [currentTradeFrom, setCurrentTradeFrom] = useState([]);
 	const [currentTradeTo, setCurrentTradeTo] = useState([]);
 	const [initialized, setInitialized] = useState(false);
-	const [displayTokens, setDisplayTokens] = useState();
+	const [displayTokens, setDisplayTokens] = useState([]);
 	const [tokensObj, setTokensObj] = useState();
 	const [tokensArr, setTokensArr] = useState();
 	const [toAmount, setToAmount] = useState('');
@@ -47,6 +47,7 @@ export default function Swap(props) {
 			});
 			setTokensArr(Object.entries(result.tokens));
 			setTokensObj(result.tokens);
+			setDisplayTokens(Object.entries(result.tokens));
 		} catch (error) {
 			console.log(error);
 		}
@@ -62,28 +63,15 @@ export default function Swap(props) {
 		//May be required
 		// getQuote();
 	}
-	// useEffect(() => {
-	// 	console.log(currentTradeFrom);
-	// }, [currentTradeFrom]);
 
 	function openModal(tempSide) {
 		setSide(tempSide);
 		const tempTokens = Object.entries(tokensObj);
-		setDisplayTokens(
-			tempTokens.map((token, i) => {
-				return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
-			})
-		);
+		setDisplayTokens(tempTokens);
 		setTokenModal('block');
 	}
 	function searchChange(e) {
-		setDisplayTokens(
-			tokensArr
-				.filter((token) => token[1].symbol.toLowerCase().includes(e.target.value))
-				.map((token, i) => {
-					return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
-				})
-		);
+		setDisplayTokens(tokensArr.filter((token) => token[1].symbol.toLowerCase().includes(e.target.value)));
 	}
 	function closeModal() {
 		document.getElementById('searchModal').value = '';
@@ -253,7 +241,11 @@ export default function Swap(props) {
 						</div>
 						<div className="modal_body">
 							<Form.Control className=" form-control" placeholder="Search" id="searchModal" onChange={(e) => searchChange(e)}></Form.Control>
-							<div id="token_list">{displayTokens}</div>
+							<div id="token_list">
+								{displayTokens.map((token, i) => {
+									return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
+								})}
+							</div>
 						</div>
 					</div>
 				</div>
