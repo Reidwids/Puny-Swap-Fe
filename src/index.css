@@ -187,13 +187,13 @@ nav {
 	padding: 10px;
 	display: grid;
 	grid-template-areas:
-		'name name image'
-		'hr hr hr'
-		'price price price'
-		'market market market'
-		'change change change';
-	width: 150px;
-	height: 150px;
+		'name name favorite image'
+		'hr hr hr x'
+		'price price price x'
+		'market market market x'
+		'change change change x';
+	width: 210px;
+	height: 200px;
 	border: 2px solid black;
 	cursor: pointer;
 }
@@ -203,8 +203,16 @@ nav {
 	padding: 0;
 }
 
+.crypto-card > button {
+	grid-area: favorite;
+	width: 40px;
+	height: 20px;
+	font-size: 10px;
+}
+
 .crypto-card > h5 {
 	grid-area: name;
+	font-size: small;
 }
 
 .crypto-card > img {
@@ -230,7 +238,8 @@ nav {
 }
 
 .crypto-card > p {
-	font-size: small;
+	font-size: 14px;
+	text-decoration: underline;
 }
 
 /*-- Exchange --*/
