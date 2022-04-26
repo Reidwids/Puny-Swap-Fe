@@ -9,19 +9,15 @@ export default function Swap(props) {
 	// const appId = process.env.moralisID;
 	const appId = 'A1ke09rT3uacaTObuqpOhW407Gl4ZBhGnhgnZ6dd';
 	const [user, setUser] = useState();
-	// const [currentTrade, setCurrentTrade] = useState({});
 	const [tokenModal, setTokenModal] = useState('none');
 	const [currentTradeFrom, setCurrentTradeFrom] = useState([]);
 	const [currentTradeTo, setCurrentTradeTo] = useState([]);
 	const [initialized, setInitialized] = useState(false);
-	// let allTokens;
-	const [allTokens, setAllTokens] = useState();
-	const [displayTokens, setDisplayTokens] = useState();
+	const [displayTokens, setDisplayTokens] = useState([]);
 	const [tokensObj, setTokensObj] = useState();
 	const [tokensArr, setTokensArr] = useState();
 	const [toAmount, setToAmount] = useState('');
 	const [gasEstimate, setGasEstimate] = useState('');
-	const [search, setSearch] = useState();
 	const [side, setSide] = useState();
 	const [chainFilter, setChainFilter] = useState('eth');
 
@@ -51,6 +47,7 @@ export default function Swap(props) {
 			});
 			setTokensArr(Object.entries(result.tokens));
 			setTokensObj(result.tokens);
+			setDisplayTokens(Object.entries(result.tokens));
 		} catch (error) {
 			console.log(error);
 		}
@@ -66,25 +63,15 @@ export default function Swap(props) {
 		//May be required
 		// getQuote();
 	}
+
 	function openModal(tempSide) {
 		setSide(tempSide);
 		const tempTokens = Object.entries(tokensObj);
-		setDisplayTokens(
-			tempTokens.map((token, i) => {
-				return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
-			})
-		);
-		console.log(displayTokens);
+		setDisplayTokens(tempTokens);
 		setTokenModal('block');
 	}
 	function searchChange(e) {
-		setDisplayTokens(
-			tokensArr
-				.filter((token) => token[1].symbol.toLowerCase().includes(e.target.value))
-				.map((token, i) => {
-					return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
-				})
-		);
+		setDisplayTokens(tokensArr.filter((token) => token[1].symbol.toLowerCase().includes(e.target.value)));
 	}
 	function closeModal() {
 		document.getElementById('searchModal').value = '';
@@ -203,14 +190,14 @@ export default function Swap(props) {
 							Ply
 						</div>
 						<div onClick={() => handleChainFilter('avalanche')} className={chainFilter === 'avalanche' ? 'exchange_filter is-active' : 'exchange_filter'}>
-							Avl
+							Ava
 						</div>
 					</div>
 				</div>
 				<div className="swapbox">
 					<div className="swapbox_select token_select" id="from_token_select" onClick={() => openModal('from')}>
 						<img className="token_image" id="from_token_img" src={currentTradeFrom.logoURI} />
-						<span id="from_token_text">{currentTradeFrom.symbol}</span>
+						<span id="from_token_text">&nbsp; {currentTradeFrom.symbol}</span>
 					</div>
 					<div className="swapbox_select">
 						<Form.Control required className="number form-control" placeholder="Amount" id="from_amount" onBlur={(e) => getQuote(e)}></Form.Control>
@@ -219,7 +206,7 @@ export default function Swap(props) {
 				<div className="swapbox">
 					<div className="swapbox_select token_select" id="to_token_select" onClick={() => openModal('to')}>
 						<img className="token_image" id="to_token_img" src={currentTradeTo.logoURI} />
-						<span id="to_token_text">{currentTradeTo.symbol}</span>
+						<span id="to_token_text">&nbsp; {currentTradeTo.symbol}</span>
 					</div>
 					<div className="swapbox_select">
 						<Form.Control required className="number form-control" placeholder="Amount" id="to_amount" value={toAmount} onChange={toAmountChange}></Form.Control>
@@ -228,7 +215,7 @@ export default function Swap(props) {
 				<div id="swap_gas">
 					{gasEstimate ? (
 						<div>
-							Fees: <span id="gas_estimate">{gasEstimate}</span> Eth{' '}
+							Fees: <span id="gas_estimate">{gasEstimate}</span> {chainFilter}{' '}
 						</div>
 					) : (
 						<div></div>
@@ -250,13 +237,15 @@ export default function Swap(props) {
 					<div className="modal-content">
 						<div className="modal-header">
 							<h5 className="modal-title">Select Token</h5>
-							<button type="button" className="close" id="modal_close" onClick={closeModal} data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
+							<button className="btn-close" id="modal_close" onClick={closeModal} data-dismiss="modal"></button>
 						</div>
 						<div className="modal_body">
 							<Form.Control className=" form-control" placeholder="Search" id="searchModal" onChange={(e) => searchChange(e)}></Form.Control>
-							<div id="token_list">{displayTokens}</div>
+							<div id="token_list">
+								{displayTokens.map((token, i) => {
+									return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
+								})}
+							</div>
 						</div>
 					</div>
 				</div>
