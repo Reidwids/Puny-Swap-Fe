@@ -62,6 +62,10 @@ export default function Swap(props) {
 		//May be required
 		// getQuote();
 	}
+	// useEffect(() => {
+	// 	console.log(currentTradeFrom);
+	// }, [currentTradeFrom]);
+
 	function openModal(tempSide) {
 		setSide(tempSide);
 		const tempTokens = Object.entries(tokensObj);
@@ -70,7 +74,6 @@ export default function Swap(props) {
 				return <CoinRow key={i} token={token[1]} dataAddress={token[0]} side={side} selectToken={selectToken}></CoinRow>;
 			})
 		);
-		console.log(displayTokens);
 		setTokenModal('block');
 	}
 	function searchChange(e) {
@@ -206,7 +209,7 @@ export default function Swap(props) {
 				<div className="swapbox">
 					<div className="swapbox_select token_select" id="from_token_select" onClick={() => openModal('from')}>
 						<img className="token_image" id="from_token_img" src={currentTradeFrom.logoURI} />
-						<span id="from_token_text">{currentTradeFrom.symbol}</span>
+						<span id="from_token_text">&nbsp; {currentTradeFrom.symbol}</span>
 					</div>
 					<div className="swapbox_select">
 						<Form.Control required className="number form-control" placeholder="Amount" id="from_amount" onBlur={(e) => getQuote(e)}></Form.Control>
@@ -215,7 +218,7 @@ export default function Swap(props) {
 				<div className="swapbox">
 					<div className="swapbox_select token_select" id="to_token_select" onClick={() => openModal('to')}>
 						<img className="token_image" id="to_token_img" src={currentTradeTo.logoURI} />
-						<span id="to_token_text">{currentTradeTo.symbol}</span>
+						<span id="to_token_text">&nbsp; {currentTradeTo.symbol}</span>
 					</div>
 					<div className="swapbox_select">
 						<Form.Control required className="number form-control" placeholder="Amount" id="to_amount" value={toAmount} onChange={toAmountChange}></Form.Control>
@@ -224,7 +227,7 @@ export default function Swap(props) {
 				<div id="swap_gas">
 					{gasEstimate ? (
 						<div>
-							Fees: <span id="gas_estimate">{gasEstimate}</span> Eth{' '}
+							Fees: <span id="gas_estimate">{gasEstimate}</span> {chainFilter}{' '}
 						</div>
 					) : (
 						<div></div>

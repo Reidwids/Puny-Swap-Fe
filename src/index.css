@@ -272,10 +272,6 @@ nav {
 
 /* Swap Crypto */
 
-.swapbox_select {
-	width: 50%;
-	float: left;
-}
 #swap_form {
 	padding: 20px;
 }
@@ -289,19 +285,19 @@ nav {
 	border-radius: 5px;
 	width: 100%;
 }
-.modal_body {
-	height: 400px;
-	overflow: scroll;
+.swapbox_select {
+	width: 50%;
+	float: left;
 }
 .token_select {
-	padding: 5px;
+	height: 40px;
 }
 .token_select:hover {
 	background-color: rgb(85, 85, 85);
 	cursor: pointer;
 }
 .token_list_img {
-	width: 30px;
+	width: 40px;
 }
 .token_row {
 	padding: 5px 10px;
@@ -312,4 +308,9 @@ nav {
 }
 .token_image {
 	width: 40px;
+}
+/* Modal */
+.modal_body {
+	height: 400px;
+	overflow: scroll;
 }
