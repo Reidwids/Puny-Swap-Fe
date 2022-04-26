@@ -9,19 +9,15 @@ export default function Swap(props) {
 	// const appId = process.env.moralisID;
 	const appId = 'A1ke09rT3uacaTObuqpOhW407Gl4ZBhGnhgnZ6dd';
 	const [user, setUser] = useState();
-	// const [currentTrade, setCurrentTrade] = useState({});
 	const [tokenModal, setTokenModal] = useState('none');
 	const [currentTradeFrom, setCurrentTradeFrom] = useState([]);
 	const [currentTradeTo, setCurrentTradeTo] = useState([]);
 	const [initialized, setInitialized] = useState(false);
-	// let allTokens;
-	const [allTokens, setAllTokens] = useState();
 	const [displayTokens, setDisplayTokens] = useState();
 	const [tokensObj, setTokensObj] = useState();
 	const [tokensArr, setTokensArr] = useState();
 	const [toAmount, setToAmount] = useState('');
 	const [gasEstimate, setGasEstimate] = useState('');
-	const [search, setSearch] = useState();
 	const [side, setSide] = useState();
 	const [chainFilter, setChainFilter] = useState('eth');
 
@@ -203,7 +199,7 @@ export default function Swap(props) {
 							Ply
 						</div>
 						<div onClick={() => handleChainFilter('avalanche')} className={chainFilter === 'avalanche' ? 'exchange_filter is-active' : 'exchange_filter'}>
-							Avl
+							Ava
 						</div>
 					</div>
 				</div>
@@ -250,9 +246,7 @@ export default function Swap(props) {
 					<div className="modal-content">
 						<div className="modal-header">
 							<h5 className="modal-title">Select Token</h5>
-							<button type="button" className="close" id="modal_close" onClick={closeModal} data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
+							<button className="btn-close" id="modal_close" onClick={closeModal} data-dismiss="modal"></button>
 						</div>
 						<div className="modal_body">
 							<Form.Control className=" form-control" placeholder="Search" id="searchModal" onChange={(e) => searchChange(e)}></Form.Control>
