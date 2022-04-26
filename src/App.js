@@ -56,7 +56,7 @@ export default function App() {
 				} else {
 					setUserState({ ...userState, message: result.data.message });
 					setTimeout(() => {
-						setUserState({...userState,
+						setUserState({
 							message: '',
 						});
 					}, 3000);
@@ -68,6 +68,7 @@ export default function App() {
 	};
 
 	const loginHandler = (cred) => {
+		console.log("run")
 		Axios.post('auth/signin', cred)
 			.then((result) => {
 				if (result.data.token) {
@@ -78,7 +79,7 @@ export default function App() {
 				} else {
 					setUserState({ ...userState, message: result.data.message });
 					setTimeout(() => {
-						setState({
+						setUserState({
 							message: '',
 						});
 					}, 3000);
@@ -100,12 +101,12 @@ export default function App() {
 			message: 'Successfully Logged Out',
 		});
 		setTimeout(() => {
-			setUserState({...userState,
+			setUserState({
 				message: '',
 			});
 		}, 3000);
 	};
-
+	
 	return (
 		<>
 			{state.isLoaded ? (
@@ -167,7 +168,7 @@ export default function App() {
 						<Route path="/exchange" isLoaded={state.isLoaded} element={<Exchange />} />
 						<Route path="/bookmarks" element={<Bookmarks />} />
 						<Route path="/signin" element={<Signin login={loginHandler} />} />
-						<Route path="/signup" element={<Signup message={userState.message} register={registerHandler} />} />
+						<Route path="/signup" element={<Signup register={registerHandler} />} />
 						<Route path="/" element={<About />} />
 					</Routes>
 				</div>
