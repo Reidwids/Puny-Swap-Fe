@@ -37,10 +37,10 @@ export default function Swap(props) {
 	// 	await Moralis.User.logOut();
 	// 	console.log('logged out');
 	// }
-	async function listAvailableTokens() {
+	async function listAvailableTokens(chain) {
 		try {
 			const result = await Moralis.Plugins.oneInch.getSupportedTokens({
-				chain: chainFilter,
+				chain: chain,
 				// The blockchain you want to use (eth/bsc/polygon)
 			});
 			setTokensArr(Object.entries(result.tokens));
@@ -103,7 +103,7 @@ export default function Swap(props) {
 				Moralis.start({ serverUrl, appId });
 				await Moralis.initPlugins();
 				// await Moralis.enable();
-				await listAvailableTokens();
+				await listAvailableTokens('eth');
 				setInitialized(true);
 			} catch (error) {
 				console.log(error);
@@ -176,7 +176,7 @@ export default function Swap(props) {
 
 	function handleChainFilter(chain) {
 		setChainFilter(chain);
-		listAvailableTokens();
+		listAvailableTokens(chain);
 		setCurrentTradeFrom([]);
 		setCurrentTradeTo([]);
 		setGasEstimate('');
