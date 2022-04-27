@@ -15,7 +15,7 @@ export default function Market(props) {
 			const response = await axios.post('isBookmarked', { crypto: data.symbol, user: props.user.user.id });
 			return Promise.resolve(response);
 		} catch (error) {
-			console.log(error);
+			return null
 		}
 	};
 
@@ -23,10 +23,10 @@ export default function Market(props) {
 		sortData(searchData);
 		const newerData = searchData.map((data, idx) => {
 			const isBookmarked = checkBookmarked(data);
-			return { ...data, isBookmarked };
+			return { ...data, isBookmarked};
 		});
 		const newData = newerData.map((data, idx) => {
-			return <CryptoCard data={data} key={idx} populateChart={populateChart} searchData={searchData} addToFavorites={props.addToFavorites} removeFromFavorites={props.removeFromFavorites} user={props.user.user.id}></CryptoCard>;
+			return <CryptoCard data={data} key={idx} populateChart={populateChart} user={props.user}></CryptoCard>;
 		});
 		return newData;
 	};

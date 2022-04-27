@@ -100,6 +100,7 @@ export default function App() {
 			user: null,
 			message: 'Successfully Logged Out',
 		});
+		navigate('/');
 		setTimeout(() => {
 			setUserState({
 				message: '',
@@ -166,7 +167,7 @@ export default function App() {
 					<Routes>
 						<Route path="/market" element={<Market coins={state.coins} stats={state.stats} user={userState.user} />} />
 						<Route path="/exchange" isLoaded={state.isLoaded} element={<Exchange />} />
-						<Route path="/bookmarks" element={<Bookmarks />} />
+						<Route path="/bookmarks" element={<Bookmarks coins={state.coins} stats={state.stats} user={userState.user?userState.user:null} />} />
 						<Route path="/signin" element={<Signin login={loginHandler} />} />
 						<Route path="/signup" element={<Signup register={registerHandler} />} />
 						<Route path="/" element={<About />} />
