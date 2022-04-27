@@ -8,16 +8,20 @@ import { Exchange } from './components/Exchange/Exchange';
 import Market from './components/Market';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
+import axios from 'axios';
 
 export default function App() {
 	const [state, setState] = React.useState({
-		isAuth: false,
-		user: null,
-		message: null,
 		coins: null,
 		stats: null,
 		isLoaded: false,
 	});
+	const [userState, setUserState] = React.useState({
+		isAuth: false,
+		user: null,
+		message: null
+	});
+
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -25,10 +29,10 @@ export default function App() {
 		if (token != null) {
 			let user = jwtDecode(token);
 			if (user) {
-				setState({ ...state, isAuth: true, user: user });
+				setUserState({...userState, user, isAuth: true})
 			} else {
 				localStorage.removeItem('token');
-				setState({ ...state, isAuth: false });
+				setUserState({...userState, isAuth: false})
 			}
 		}
 		Axios.get('allCoins')
@@ -51,9 +55,9 @@ export default function App() {
 				if (result.data.message === 'User created successfully') {
 					navigate('/signin');
 				} else {
-					setState({ ...state, message: result.data.message });
+					setUserState({ ...userState, message: result.data.message });
 					setTimeout(() => {
-						setState({
+						setUserState({
 							message: '',
 						});
 					}, 3000);
@@ -65,17 +69,18 @@ export default function App() {
 	};
 
 	const loginHandler = (cred) => {
+		console.log("run")
 		Axios.post('auth/signin', cred)
 			.then((result) => {
 				if (result.data.token) {
 					localStorage.setItem('token', result.data.token);
 					let user = jwtDecode(result.data.token);
-					setState({ ...state, isAuth: true, user: user });
+					setUserState({ ...userState, isAuth: true, user: user });
 					navigate('/');
 				} else {
-					setState({ ...state, message: result.data.message });
+					setUserState({ ...userState, message: result.data.message });
 					setTimeout(() => {
-						setState({
+						setUserState({
 							message: '',
 						});
 					}, 3000);
@@ -83,26 +88,36 @@ export default function App() {
 			})
 			.catch((err) => {
 				console.log(err);
-				setState({ ...state, isAuth: false });
+				setUserState({ ...userState, isAuth: false });
 			});
 	};
 
 	const logoutHandler = (e) => {
 		e.preventDefault();
 		localStorage.removeItem('token');
-		console.log(state.coins);
-		setState({
-			...state,
+		setUserState({
+			...userState,
 			isAuth: false,
 			user: null,
 			message: 'Successfully Logged Out',
 		});
 		setTimeout(() => {
-			setState({
+			setUserState({
 				message: '',
 			});
 		}, 3000);
 	};
+	
+	const addToFavorites = (e, crypto)=>{
+		e.preventDefault();
+		e.stopPropagation();
+		axios.post("addBookmark", {crypto, owner: userState.user.user.id})
+		.then((result) => {
+			console.log(result)
+		}).catch((err) => {
+			console.log(err)
+		});
+	}
 	return (
 		<>
 			{state.isLoaded ? (
@@ -125,11 +140,11 @@ export default function App() {
 								</Link>
 							</li>
 							<li className="nav-item">
-								<Link className="nav-link" to={state.isAuth ? '/bookmarks' : '/signin'}>
+								<Link className="nav-link" to={userState.isAuth ? '/bookmarks' : '/signin'}>
 									Bookmarks
 								</Link>
 							</li>
-							{!state.isAuth ? (
+							{!userState.isAuth ? (
 								<li className="nav-item">
 									<Link className="nav-link" to="/signin">
 										Sign In
@@ -138,7 +153,7 @@ export default function App() {
 							) : (
 								<></>
 							)}
-							{!state.isAuth ? (
+							{!userState.isAuth ? (
 								<li className="nav-item">
 									<Link className="nav-link" to="/signup">
 										Sign Up
@@ -147,7 +162,7 @@ export default function App() {
 							) : (
 								<></>
 							)}
-							{state.isAuth ? (
+							{userState.isAuth ? (
 								<li className="nav-item">
 									<Link className="nav-link" to="/signout" onClick={logoutHandler}>
 										Log Out
@@ -158,13 +173,13 @@ export default function App() {
 							)}
 						</ul>
 					</nav>
-					{state.message ? <div className="notification">{state.message}</div> : <></>}
+					{userState.message ? <div className="notification">{userState.message}</div> : <></>}
 					<Routes>
-						<Route path="/market" element={<Market coins={state.coins} stats={state.stats} />} />
+						<Route path="/market" element={<Market coins={state.coins} stats={state.stats} addToFavorites={addToFavorites}/>} />
 						<Route path="/exchange" isLoaded={state.isLoaded} element={<Exchange />} />
 						<Route path="/bookmarks" element={<Bookmarks />} />
 						<Route path="/signin" element={<Signin login={loginHandler} />} />
-						<Route path="/signup" element={<Signup message={state.message} register={registerHandler} />} />
+						<Route path="/signup" element={<Signup register={registerHandler} />} />
 						<Route path="/" element={<About />} />
 					</Routes>
 				</div>

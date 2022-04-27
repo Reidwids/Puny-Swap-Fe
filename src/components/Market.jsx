@@ -14,7 +14,7 @@ export default function Market(props) {
   const mapData = (searchData)=>{
     sortData(searchData)
     const newData = searchData.map((data,idx)=>{
-      return <CryptoCard data={data} key={idx} populateChart={populateChart} searchData={searchData}></CryptoCard>
+      return <CryptoCard data={data} key={idx} populateChart={populateChart} searchData={searchData} addToFavorites={props.addToFavorites}></CryptoCard>
     })
     return newData
   }
