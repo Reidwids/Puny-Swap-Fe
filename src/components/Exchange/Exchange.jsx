@@ -24,7 +24,7 @@ export function Exchange(props) {
 							Swap Crypto
 						</div>
 					</div>
-					{filter === 'send' ? <Send></Send> : <Swap isLoaded={props.isLoaded}></Swap>}
+					{filter === 'send' ? <Send></Send> : <Swap isLoaded={props.isLoaded} user={props.user.user.id}></Swap>}
 				</Container>
 				{isLoading ? (
 					<div className="sendLoader">

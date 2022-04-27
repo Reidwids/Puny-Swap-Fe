@@ -165,7 +165,7 @@ export default function App() {
 					{userState.message ? <div className="notification">{userState.message}</div> : <></>}
 					<Routes>
 						<Route path="/market" element={<Market coins={state.coins} stats={state.stats} user={userState.user} />} />
-						<Route path="/exchange" isLoaded={state.isLoaded} element={<Exchange />} />
+						<Route path="/exchange" isLoaded={state.isLoaded} element={<Exchange user={userState.user} />} />
 						<Route path="/bookmarks" element={<Bookmarks />} />
 						<Route path="/signin" element={<Signin login={loginHandler} />} />
 						<Route path="/signup" element={<Signup register={registerHandler} />} />
