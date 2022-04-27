@@ -1,14 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { TransactionContext } from '../../context/TransactionContext';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import PropagateLoader from 'react-spinners/PropagateLoader';
 import Swap from './Swap';
 import Send from './Send';
-const { ethereum } = window;
 
 export function Exchange(props) {
 	const [filter, setFilter] = useState('send');
-	const { isLoading, sendTransaction, connectWallet, currentAccount, formData, handleChange, setFormData } = useContext(TransactionContext);
+	const { isLoading, connectWallet, currentAccount } = useContext(TransactionContext);
 
 	const handleFilterClick = (filter) => {
 		setFilter(filter);

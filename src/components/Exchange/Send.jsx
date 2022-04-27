@@ -1,13 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { TransactionContext } from '../../context/TransactionContext';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 
 export default function Send() {
 	// const { sendTransaction, connectWallet, currentAccount, formData, handleChange, setFormData } = useContext(TransactionContext);
 	const { sendTransaction, formData, handleChange, currentAccount } = useContext(TransactionContext);
 	console.log(currentAccount);
 	const handleSubmit = (e) => {
-		const { addressTo, amount, keyword, message } = formData;
+		const { addressTo } = formData;
 		e.preventDefault();
 		if (addressTo.toLowerCase() !== currentAccount) {
 			sendTransaction(formData);

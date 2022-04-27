@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import Moralis from 'moralis';
 import CoinRow from './CoinRow';
@@ -214,7 +214,7 @@ export default function Swap(props) {
 								</div>
 							) : (
 								<div>
-									<img className="token_image" id="from_token_img" src={currentTradeFrom.logoURI} />
+									<img className="token_image" id="from_token_img" src={currentTradeFrom.logoURI} alt="Token from" />
 									<span id="from_token_text">&nbsp;{currentTradeFrom.symbol}</span>
 								</div>
 							)}
@@ -236,7 +236,7 @@ export default function Swap(props) {
 								</div>
 							) : (
 								<div>
-									<img className="token_image" id="to_token_img" src={currentTradeTo.logoURI} />
+									<img className="token_image" id="to_token_img" src={currentTradeTo.logoURI} alt="Token to" />
 									<span id="to_token_text">&nbsp;{currentTradeTo.symbol}</span>
 								</div>
 							)}
@@ -246,10 +246,11 @@ export default function Swap(props) {
 						</div>
 					</div>
 				</div>
-				<div id="swap_gas">
+				<div id="swap_fees_cont">
 					{gasEstimate ? (
-						<div>
+						<div id="swap_fees">
 							Fees: <span id="gas_estimate">{gasEstimate}</span> {chainFilter === 'eth' ? 'eth' : chainFilter === 'bsc' ? 'bnb' : 'polygon'}
+							{/* <span style={{ fontSize: '10px' }}>&nbsp;&nbsp;▼</span> */}
 						</div>
 					) : (
 						<div></div>
