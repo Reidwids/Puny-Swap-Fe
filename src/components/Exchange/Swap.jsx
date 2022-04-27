@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import Moralis from 'moralis';
 import CoinRow from './CoinRow';
+import axios from 'axios';
+import favSvg from '../../favorite.svg';
+import favSvgBdr from '../../favorite_border.svg';
 const { ethereum } = window;
 
 export default function Swap(props) {
@@ -21,6 +24,7 @@ export default function Swap(props) {
 	const [gasEstimate, setGasEstimate] = useState('');
 	const [side, setSide] = useState();
 	const [chainFilter, setChainFilter] = useState('eth');
+	const [favorite, setFavorite] = useState(false);
 
 	async function login() {
 		//fix login so we don't have to login every time we visit page
@@ -56,10 +60,16 @@ export default function Swap(props) {
 		console.log(tokensObj[address]);
 		if (side === 'from') {
 			setCurrentTradeFrom(tokensObj[address]);
+			if (currentTradeTo.length !== 0) handleSwapBookmark(tokensObj[address].symbol, currentTradeTo.symbol);
 		}
 		if (side === 'to') {
 			setCurrentTradeTo(tokensObj[address]);
+			if (currentTradeFrom.length !== 0) handleSwapBookmark(currentTradeFrom.symbol, tokensObj[address].symbol);
 		}
+		// let tokenSet = Promise.resolve(setCurrentTradeFrom(tokensObj[address]));
+		// tokenSet.then(function (result) {
+		// 	handleSwapBookmark();
+		// });
 		//May be required
 		// getQuote();
 	}
@@ -183,6 +193,58 @@ export default function Swap(props) {
 		setToAmount('');
 		document.getElementById('from_amount').value = '';
 	}
+	const addSwap = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		axios
+			.post('addSwap', { crypto1: currentTradeFrom.symbol, crypto2: currentTradeTo.symbol, owner: props.user })
+			.then((result) => {
+				setFavorite(false);
+			})
+			.then((result) => {
+				handleSwapBookmark(currentTradeFrom.symbol, currentTradeTo.symbol);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+	const removeSwap = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		axios
+			.post('removeSwap', { crypto1: currentTradeFrom.symbol, crypto2: currentTradeTo.symbol, owner: props.user })
+			.then((result) => {
+				setFavorite(true);
+			})
+			.then((result) => {
+				handleSwapBookmark(currentTradeFrom.symbol, currentTradeTo.symbol);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+	const checkBookmarked = async (address1, address2) => {
+		try {
+			console.log('Trade from: ', address1);
+			console.log('Trade to: ', address2);
+			const response = await axios.post('swapIsBookmarked', { crypto1: address1, crypto2: address2, user: props.user });
+			return Promise.resolve(response);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+	function handleSwapBookmark(address1, address2) {
+		let isBookmarked = Promise.resolve(checkBookmarked(address1, address2));
+		isBookmarked.then(function (result) {
+			setFavorite(result.data);
+		});
+	}
+	// useEffect(() => {
+	// 	const checkBookmarked = Promise.resolve(checkBookmarked());
+	// 	checkBookmarked.then(function (result) {
+	// 		setBookmarked(result.data);
+	// 	});
+	// }, [props]);
 	return (
 		<div id="swap">
 			<div id="swap_form">
@@ -199,7 +261,21 @@ export default function Swap(props) {
 						</div>
 					</div>
 				</div>
-
+				<div id="swap_bookmark">
+					{currentTradeFrom.length === 0 || currentTradeTo.length === 0 ? (
+						<div></div>
+					) : !favorite ? (
+						<div id="swap_bookmark_text" onClick={(e) => addSwap(e)}>
+							<span>Save this swap &nbsp;</span>
+							<img src={favSvgBdr} alt="favorite" />
+						</div>
+					) : (
+						<div id="swap_bookmark_text" onClick={(e) => removeSwap(e)}>
+							<span>Remove this swap &nbsp;</span>
+							<img src={favSvg} alt="favorite" />
+						</div>
+					)}
+				</div>
 				<div className="swapbox">
 					<div className="swapforms swapform_top">
 						<div
