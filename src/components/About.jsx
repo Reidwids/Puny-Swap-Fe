@@ -1,16 +1,6 @@
-import React, { useContext } from 'react';
-import { TransactionContext } from '../context/TransactionContext';
-import { Container, Form, Button } from 'react-bootstrap';
+import React from 'react';
 
 export const About = () => {
-	const { sendTransaction, connectWallet, currentAccount, formData, handleChange, setFormData } = useContext(TransactionContext);
-
-	const handleSubmit = (e) => {
-		// const {addressTo, amount, keyword, message} = formData;
-		e.preventDefault();
-		sendTransaction(formData);
-	};
-
 	return (
 		<div className="content-section" id="about">
 			<div className="left">
@@ -23,29 +13,6 @@ export const About = () => {
 					<a href="http://localhost:3000/signup" className="btn">
 						Get Started
 					</a>
-					<Container>
-						<Form.Group>
-							<Form.Control required name="addressTo" placeholder="Address To" onChange={(e) => handleChange(e, 'addressTo')}></Form.Control>
-						</Form.Group>
-						<Form.Group>
-							<Form.Control required name="amount" placeholder="Amount (Eth)" onChange={(e) => handleChange(e, 'amount')}></Form.Control>
-						</Form.Group>
-						<Form.Group>
-							<Form.Control required name="keyword" placeholder="Keyword (Gif)" onChange={(e) => handleChange(e, 'keyword')}></Form.Control>
-						</Form.Group>
-						<Form.Group>
-							<Form.Control required name="message" placeholder="Message" onChange={(e) => handleChange(e, 'message')}></Form.Control>
-						</Form.Group>
-						<Button varient="primary" onClick={handleSubmit}>
-							Send Now
-						</Button>
-					</Container>
-
-					{!currentAccount && (
-						<button type="button" onClick={connectWallet}>
-							Connect Wallet
-						</button>
-					)}
 				</div>
 			</div>
 		</div>
