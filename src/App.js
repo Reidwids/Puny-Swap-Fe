@@ -8,7 +8,6 @@ import { Exchange } from './components/Exchange/Exchange';
 import Market from './components/Market';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
-import axios from 'axios';
 
 export default function App() {
 	const [state, setState] = React.useState({
@@ -111,13 +110,25 @@ export default function App() {
 	const addToFavorites = (e, crypto)=>{
 		e.preventDefault();
 		e.stopPropagation();
-		axios.post("addBookmark", {crypto, owner: userState.user.user.id})
+		Axios.post("addBookmark", {crypto, owner: userState.user.user.id})
 		.then((result) => {
 			console.log(result)
 		}).catch((err) => {
 			console.log(err)
 		});
 	}
+
+	const removeFromFavorites = (e, crypto) =>{
+		e.preventDefault();
+		e.stopPropagation();
+		Axios.post("removeBookmark", {crypto, owner: userState.user.user.id})
+		.then((result) => {
+			console.log(result)
+		}).catch((err) => {
+			console.log(err)
+		});
+	}
+
 	return (
 		<>
 			{state.isLoaded ? (
@@ -175,7 +186,7 @@ export default function App() {
 					</nav>
 					{userState.message ? <div className="notification">{userState.message}</div> : <></>}
 					<Routes>
-						<Route path="/market" element={<Market coins={state.coins} stats={state.stats} addToFavorites={addToFavorites}/>} />
+						<Route path="/market" element={<Market coins={state.coins} stats={state.stats} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} user={userState.user}/>} />
 						<Route path="/exchange" isLoaded={state.isLoaded} element={<Exchange />} />
 						<Route path="/bookmarks" element={<Bookmarks />} />
 						<Route path="/signin" element={<Signin login={loginHandler} />} />
