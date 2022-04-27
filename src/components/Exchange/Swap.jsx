@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import Moralis from 'moralis';
 import CoinRow from './CoinRow';
+const { ethereum } = window;
 
 export default function Swap(props) {
 	// const serverUrl = process.env.moralisURL;
@@ -23,16 +24,13 @@ export default function Swap(props) {
 
 	async function login() {
 		//fix login so we don't have to login every time we visit page
-		setUser(Moralis.User.current());
-		if (!user) {
-			try {
-				setUser(await Moralis.authenticate());
-				//Change below to remove disabled when logged into metamask
-				// document.getElementById('swap_button').disabled = false;
-				console.log('Logged in');
-			} catch (error) {
-				console.log(error);
-			}
+		try {
+			setUser(await Moralis.authenticate());
+			//Change below to remove disabled when logged into metamask
+			// document.getElementById('swap_button').disabled = false;
+			console.log('Logged in');
+		} catch (error) {
+			console.log(error);
 		}
 	}
 	// async function logOut() {
@@ -54,6 +52,8 @@ export default function Swap(props) {
 	}
 	function selectToken(address, side) {
 		closeModal();
+		console.log(side);
+		console.log(tokensObj[address]);
 		if (side === 'from') {
 			setCurrentTradeFrom(tokensObj[address]);
 		}
@@ -71,27 +71,31 @@ export default function Swap(props) {
 		setTokenModal('block');
 	}
 	function searchChange(e) {
-		setDisplayTokens(tokensArr.filter((token) => token[1].symbol.toLowerCase().includes(e.target.value)));
+		setDisplayTokens(tokensArr.filter((token) => token[1].symbol.toLowerCase().includes(e.target.value.toLowerCase()) || token[1].name.toLowerCase().includes(e.target.value.toLowerCase())));
 	}
 	function closeModal() {
 		document.getElementById('searchModal').value = '';
 		setTokenModal('none');
 	}
 	async function getQuote(e) {
-		if (!currentTradeFrom || !currentTradeTo) return;
-		let amount = Number(e.target.value * 10 ** currentTradeFrom.decimals);
-		const quote = await Moralis.Plugins.oneInch.quote({
-			chain: chainFilter,
-			// The blockchain you want to use (eth/bsc/polygon)
-			fromTokenAddress: currentTradeFrom.address,
-			// The token you want to swap
-			toTokenAddress: currentTradeTo.address,
-			// The token you want to receive
-			amount: amount,
-		});
-		console.log(quote);
-		setGasEstimate((quote.estimatedGas * 0.000000000905).toFixed(6));
-		setToAmount(quote.toTokenAmount / 10 ** quote.toToken.decimals);
+		if (Number(e.target.value) !== 0 && currentTradeFrom && currentTradeTo) {
+			console.log(currentTradeFrom);
+			console.log(currentTradeTo);
+			let amount = Number(e.target.value * 10 ** currentTradeFrom.decimals);
+			console.log(amount);
+			console.log(chainFilter);
+			const quote = await Moralis.Plugins.oneInch.quote({
+				chain: chainFilter,
+				// The blockchain you want to use (eth/bsc/polygon)
+				fromTokenAddress: currentTradeFrom.address,
+				// The token you want to swap
+				toTokenAddress: currentTradeTo.address,
+				// The token you want to receive
+				amount: amount,
+			});
+			setGasEstimate((quote.estimatedGas * 0.000000000905).toFixed(6));
+			setToAmount(quote.toTokenAmount / 10 ** quote.toToken.decimals);
+		}
 	}
 	async function init() {
 		if (!initialized) {
@@ -100,10 +104,6 @@ export default function Swap(props) {
 				await Moralis.initPlugins();
 				// await Moralis.enable();
 				await listAvailableTokens();
-				setUser(Moralis.User.current());
-				if (user) {
-					setUser(await Moralis.authenticate());
-				}
 				setInitialized(true);
 			} catch (error) {
 				console.log(error);
@@ -111,6 +111,10 @@ export default function Swap(props) {
 		}
 	}
 	async function trySwap() {
+		if (currentTradeFrom.address === currentTradeTo.address) {
+			alert('Cannot swap between same coin!');
+			return;
+		}
 		let address = Moralis.User.current().get('ethAddress');
 		let amount = Number(document.getElementById('from_amount').value * 10 ** currentTradeFrom.decimals);
 		if (currentTradeFrom.symbol !== 'ETH') {
@@ -135,9 +139,10 @@ export default function Swap(props) {
 				});
 			}
 		}
-		console.log(currentTradeFrom);
-		console.log(amount);
-		console.log(address);
+		console.log(ethereum);
+		// console.log(currentTradeFrom);
+		// console.log(amount);
+		// console.log(address);
 		await doSwap(address, amount);
 	}
 
@@ -169,11 +174,14 @@ export default function Swap(props) {
 	// 	console.log(displayTokens);
 	// }, [displayTokens]);
 
-	function toAmountChange() {
-		console.log('Changing toAmount..');
-	}
 	function handleChainFilter(chain) {
 		setChainFilter(chain);
+		listAvailableTokens();
+		setCurrentTradeFrom([]);
+		setCurrentTradeTo([]);
+		setGasEstimate('');
+		setToAmount('');
+		document.getElementById('from_amount').value = '';
 	}
 	return (
 		<div id="swap">
@@ -189,33 +197,59 @@ export default function Swap(props) {
 						<div onClick={() => handleChainFilter('polygon')} className={chainFilter === 'polygon' ? 'exchange_filter is-active' : 'exchange_filter'}>
 							Ply
 						</div>
-						<div onClick={() => handleChainFilter('avalanche')} className={chainFilter === 'avalanche' ? 'exchange_filter is-active' : 'exchange_filter'}>
-							Ava
+					</div>
+				</div>
+
+				<div className="swapbox">
+					<div className="swapforms swapform_top">
+						<div
+							className="swapbox_select token_select"
+							style={{ display: currentTradeFrom.length === 0 ? 'flex' : 'block', justifyContent: currentTradeFrom.length === 0 ? 'center' : 'none', alignItems: currentTradeFrom.length === 0 ? 'center' : 'none' }}
+							id="from_token_select"
+							onClick={() => openModal('from')}
+						>
+							{currentTradeFrom.length === 0 ? (
+								<div className="token_select_label">
+									Select a token <span style={{ fontSize: '10px' }}>▼</span>
+								</div>
+							) : (
+								<div>
+									<img className="token_image" id="from_token_img" src={currentTradeFrom.logoURI} />
+									<span id="from_token_text">&nbsp;{currentTradeFrom.symbol}</span>
+								</div>
+							)}
+						</div>
+						<div className="swapbox_select">
+							<Form.Control required className="number form-control" placeholder="Amount" id="from_amount" onChange={(e) => getQuote(e)}></Form.Control>
 						</div>
 					</div>
-				</div>
-				<div className="swapbox">
-					<div className="swapbox_select token_select" id="from_token_select" onClick={() => openModal('from')}>
-						<img className="token_image" id="from_token_img" src={currentTradeFrom.logoURI} />
-						<span id="from_token_text">&nbsp; {currentTradeFrom.symbol}</span>
-					</div>
-					<div className="swapbox_select">
-						<Form.Control required className="number form-control" placeholder="Amount" id="from_amount" onBlur={(e) => getQuote(e)}></Form.Control>
-					</div>
-				</div>
-				<div className="swapbox">
-					<div className="swapbox_select token_select" id="to_token_select" onClick={() => openModal('to')}>
-						<img className="token_image" id="to_token_img" src={currentTradeTo.logoURI} />
-						<span id="to_token_text">&nbsp; {currentTradeTo.symbol}</span>
-					</div>
-					<div className="swapbox_select">
-						<Form.Control required className="number form-control" placeholder="Amount" id="to_amount" value={toAmount} onChange={toAmountChange}></Form.Control>
+					<div className="swapforms swapform_bottom">
+						<div
+							className="swapbox_select token_select"
+							style={{ display: currentTradeTo.length === 0 ? 'flex' : 'block', justifyContent: currentTradeTo.length === 0 ? 'center' : 'none', alignItems: currentTradeTo.length === 0 ? 'center' : 'none' }}
+							id="to_token_select"
+							onClick={() => openModal('to')}
+						>
+							{currentTradeTo.length === 0 ? (
+								<div className="token_select_label">
+									Select a token <span style={{ fontSize: '10px' }}>▼</span>
+								</div>
+							) : (
+								<div>
+									<img className="token_image" id="to_token_img" src={currentTradeTo.logoURI} />
+									<span id="to_token_text">&nbsp;{currentTradeTo.symbol}</span>
+								</div>
+							)}
+						</div>
+						<div className="swapbox_select">
+							<Form.Control disabled required className="number form-control" placeholder="Amount" id="to_amount" value={toAmount}></Form.Control>
+						</div>
 					</div>
 				</div>
 				<div id="swap_gas">
 					{gasEstimate ? (
 						<div>
-							Fees: <span id="gas_estimate">{gasEstimate}</span> {chainFilter}{' '}
+							Fees: <span id="gas_estimate">{gasEstimate}</span> {chainFilter === 'eth' ? 'eth' : chainFilter === 'bsc' ? 'bnb' : 'polygon'}
 						</div>
 					) : (
 						<div></div>
@@ -231,7 +265,8 @@ export default function Swap(props) {
 			</button>
 			<button id="btn-logout" onClick={logOut}>
 				Logout
-			</button> */}
+			</button>
+			 */}
 			<div className="modal" id="token_modal" tabIndex="-1" role="dialog" style={{ display: tokenModal }}>
 				<div className="modal-dialog" role="document">
 					<div className="modal-content">

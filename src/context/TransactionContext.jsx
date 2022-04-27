@@ -94,9 +94,8 @@ export const TransactionProvider = ({ children }) => {
 			throw new Error('No ethereum object');
 		}
 	};
-
 	useEffect(() => {
 		checkIfWalletIsConnected();
 	}, []);
-	return <TransactionContext.Provider value={{ sendTransaction, connectWallet, currentAccount, formData, setFormData, handleChange }}>{children}</TransactionContext.Provider>;
+	return <TransactionContext.Provider value={{ sendTransaction, connectWallet, currentAccount, formData, setFormData, handleChange, isLoading }}>{children}</TransactionContext.Provider>;
 };

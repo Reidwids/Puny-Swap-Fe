@@ -13,6 +13,25 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+/* ScrollBar */
+::-webkit-scrollbar {
+	width: 8px;
+	cursor: pointer !important;
+}
+::-webkit-scrollbar-track {
+	background-color: rgb(214, 213, 213);
+	border-radius: 15px;
+	cursor: pointer !important;
+}
+::-webkit-scrollbar-thumb {
+	background-color: #979797;
+	border-radius: 15px;
+	cursor: pointer !important;
+}
+::-webkit-scrollbar-thumb:hover {
+	cursor: pointer !important;
+}
+
 nav {
 	width: 100%;
 	height: 8vh;
@@ -237,9 +256,8 @@ nav {
 
 /* Send eth */
 #exchange_cont {
-	margin-top: 20%;
+	margin-top: 30vh;
 }
-
 .exchange_filters {
 	display: flex;
 	width: 100%;
@@ -248,7 +266,7 @@ nav {
 .exchange_filter {
 	flex-basis: 50%;
 	flex-grow: 1;
-	background-color: #ccc;
+	background-color: rgb(189, 189, 189);
 	color: rgb(112, 112, 112);
 	text-align: center;
 	font-size: 0.75em;
@@ -274,25 +292,52 @@ nav {
 	width: 100%;
 	color: white;
 }
-.exchange_button:hover {
+.exchange_button:hover,
+.connect_wallet_button:hover {
 	border: 2px solid black;
 	color: white;
 }
-
+#connect_wallet {
+	display: flex;
+	justify-content: center;
+}
+.connect_wallet_button {
+	margin-top: 50vh;
+}
+.exchange_app {
+	width: 350px;
+	padding: 20px;
+	background-color: #dbdada;
+	border-radius: 10px;
+	box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+#send_form {
+	margin: 10px 0;
+}
+.send_form_field {
+	margin-bottom: 1px;
+}
+.sendLoader {
+	display: flex;
+	justify-content: center;
+	margin-top: 10px;
+}
 /* Swap Crypto */
 
-#swap_form {
-	padding: 20px;
-}
 .chain_filters {
-	margin-bottom: 10px;
+	margin: 10px 0;
 }
-.swapbox {
-	overflow: auto;
-	background-color: gray;
+.swapforms {
+	overflow: hidden;
+	background-color: rgb(156, 156, 156);
 	border: 1px solid #565656;
 	border-radius: 5px;
 	width: 100%;
+	height: 60px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
 }
 .swapbox_select {
 	width: 50%;
@@ -301,9 +346,23 @@ nav {
 .token_select {
 	height: 40px;
 }
+.token_select_label {
+	align-items: center;
+}
+#to_token_select,
+#from_token_select {
+	border-radius: 5px;
+}
+.swapform_top {
+	margin-bottom: 1px;
+}
+.swapform_bottom {
+	margin-bottom: 10px;
+}
 .token_select:hover {
-	background-color: rgb(85, 85, 85);
+	background-color: hsl(0, 0%, 36%);
 	cursor: pointer;
+	color: rgb(235, 235, 235);
 }
 .token_list_img {
 	width: 40px;
@@ -322,6 +381,11 @@ nav {
 .modal_body {
 	height: 400px;
 	overflow: scroll;
+	overflow-x: hidden;
+}
+#searchModal {
+	position: sticky;
+	top: 0;
 }
 
 /* Log pages */

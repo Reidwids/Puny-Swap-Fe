@@ -1,35 +1,48 @@
 import React, { useContext, useState } from 'react';
 import { TransactionContext } from '../../context/TransactionContext';
 import { Container, Form, Button } from 'react-bootstrap';
+import PropagateLoader from 'react-spinners/PropagateLoader';
 import Swap from './Swap';
 import Send from './Send';
+const { ethereum } = window;
 
 export function Exchange(props) {
 	const [filter, setFilter] = useState('send');
-	const { sendTransaction, connectWallet, currentAccount, formData, handleChange, setFormData } = useContext(TransactionContext);
+	const { isLoading, sendTransaction, connectWallet, currentAccount, formData, handleChange, setFormData } = useContext(TransactionContext);
 
 	const handleFilterClick = (filter) => {
 		setFilter(filter);
 	};
-
-	return (
-		<div className="content-section">
-			<Container className="col-4">
-				<div className="exchange_filters">
-					<div onClick={() => handleFilterClick('send')} className={filter === 'send' ? 'exchange_filter is-active' : 'exchange_filter'}>
-						Send Eth
+	if (currentAccount) {
+		return (
+			<div id="exchange_cont">
+				<Container className="exchange_app">
+					<div className="exchange_filters">
+						<div onClick={() => handleFilterClick('send')} className={filter === 'send' ? 'exchange_filter is-active' : 'exchange_filter'}>
+							Send Eth
+						</div>
+						<div onClick={() => handleFilterClick('swap')} className={filter === 'swap' ? 'exchange_filter is-active' : 'exchange_filter'}>
+							Swap Crypto
+						</div>
 					</div>
-					<div onClick={() => handleFilterClick('swap')} className={filter === 'swap' ? 'exchange_filter is-active' : 'exchange_filter'}>
-						Swap Crypto
+					{filter === 'send' ? <Send></Send> : <Swap isLoaded={props.isLoaded}></Swap>}
+				</Container>
+				{isLoading ? (
+					<div className="sendLoader">
+						<PropagateLoader size={15}></PropagateLoader>
 					</div>
-				</div>
-				{filter === 'send' ? <Send></Send> : <Swap isLoaded={props.isLoaded}></Swap>}
-			</Container>
-			{!currentAccount && (
-				<Button className="exchange_button" onClick={connectWallet}>
+				) : (
+					<></>
+				)}
+			</div>
+		);
+	} else {
+		return (
+			<div id="connect_wallet">
+				<Button className="connect_wallet_button" onClick={connectWallet}>
 					Connect Wallet
 				</Button>
-			)}
-		</div>
-	);
+			</div>
+		);
+	}
 }
