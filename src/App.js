@@ -18,7 +18,7 @@ export default function App() {
 	const [userState, setUserState] = React.useState({
 		isAuth: false,
 		user: null,
-		message: null
+		message: null,
 	});
 
 	const navigate = useNavigate();
@@ -28,10 +28,10 @@ export default function App() {
 		if (token != null) {
 			let user = jwtDecode(token);
 			if (user) {
-				setUserState({...userState, user, isAuth: true})
+				setUserState({ ...userState, user, isAuth: true });
 			} else {
 				localStorage.removeItem('token');
-				setUserState({...userState, isAuth: false})
+				setUserState({ ...userState, isAuth: false });
 			}
 		}
 		Axios.get('allCoins')
@@ -68,7 +68,7 @@ export default function App() {
 	};
 
 	const loginHandler = (cred) => {
-		console.log("run")
+		console.log('run');
 		Axios.post('auth/signin', cred)
 			.then((result) => {
 				if (result.data.token) {
@@ -106,28 +106,6 @@ export default function App() {
 			});
 		}, 3000);
 	};
-	
-	const addToFavorites = (e, crypto)=>{
-		e.preventDefault();
-		e.stopPropagation();
-		Axios.post("addBookmark", {crypto, owner: userState.user.user.id})
-		.then((result) => {
-			console.log(result)
-		}).catch((err) => {
-			console.log(err)
-		});
-	}
-
-	const removeFromFavorites = (e, crypto) =>{
-		e.preventDefault();
-		e.stopPropagation();
-		Axios.post("removeBookmark", {crypto, owner: userState.user.user.id})
-		.then((result) => {
-			console.log(result)
-		}).catch((err) => {
-			console.log(err)
-		});
-	}
 
 	return (
 		<>
@@ -186,7 +164,7 @@ export default function App() {
 					</nav>
 					{userState.message ? <div className="notification">{userState.message}</div> : <></>}
 					<Routes>
-						<Route path="/market" element={<Market coins={state.coins} stats={state.stats} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} user={userState.user}/>} />
+						<Route path="/market" element={<Market coins={state.coins} stats={state.stats} user={userState.user} />} />
 						<Route path="/exchange" isLoaded={state.isLoaded} element={<Exchange />} />
 						<Route path="/bookmarks" element={<Bookmarks />} />
 						<Route path="/signin" element={<Signin login={loginHandler} />} />
