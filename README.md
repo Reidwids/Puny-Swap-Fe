@@ -8,16 +8,16 @@
 
 ## Screenshots
 
-####Homepage
+#### Homepage
 ![Image of Homescreen](https://i.ibb.co/VTmCmns/image.png)
 
-####Market
+#### Market
 ![Image of Market](https://i.ibb.co/VTmCmns/image.png)
 
-####Exchange
+#### Exchange
 ![Image of Market](https://i.ibb.co/VTmCmns/image.png)
 
-####Bookmarks
+#### Bookmarks
 ![Image of Market](https://i.ibb.co/VTmCmns/image.png)
 
 <br>
