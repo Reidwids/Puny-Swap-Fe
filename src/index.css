@@ -1,5 +1,6 @@
 * {
 	--main-blue: #0f0f44;
+	--gray-element: #dbdada;
 }
 body {
 	margin: 0;
@@ -80,67 +81,91 @@ nav {
 	justify-content: center;
 	align-items: center;
 }
-
 #about {
 	display: grid;
 	grid-template-areas: 'left left right';
 }
-
 #about > .left {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	grid-area: left;
 }
-
 #about > .right {
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	grid-area: right;
 }
-
-#about > .right > div {
+#about_cont {
 	display: flex;
-	align-items: center;
-	justify-content: space-between;
 	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--gray-element);
+	box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+	padding: 10px;
+	width: 30%;
 	border-radius: 5px;
-	border: 2px solid black;
 	width: 75%;
-	padding: 25% 10%;
+	padding: 40px;
 }
-
-#about > .right > div > * {
-	padding: 0;
-	margin-bottom: 20px;
+#about_cont_title {
+	margin-bottom: 15px;
+}
+#logo_text {
+	width: 70%;
+	margin-bottom: 15px;
 }
 .btn {
 	font: 10px;
-	text-decoration: none;
-	background-color: #3f3ea5;
+	background-color: hsl(240, 55%, 26%);
 	color: #ffffff;
-	padding: 5px 10px;
 	border: 2px solid black;
 	border-radius: 3px;
 }
-
 .btn:hover {
-	border: 1px solid black;
-	color: black;
+	border: 2px solid black;
+	color: white;
+	background-color: hsl(240, 70%, 40%);
 }
-
 .full-logo {
 	width: 50%;
 	height: auto;
 }
+#about_button {
+	width: 100%;
+	height: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: all 0.5s;
+}
+#about_button span {
+	display: inline-block;
+	position: relative;
+	transition: 0.5s;
+}
+#about_button span:after {
+	content: '\00bb';
+	position: absolute;
+	opacity: 0;
+	top: 0;
+	right: -20px;
+	transition: 0.5s;
+}
+#about_button:hover span {
+	padding-right: 25px;
+}
+
+#about_button:hover span:after {
+	opacity: 1;
+	right: 0;
+}
+
 .notification {
 	padding-top: 9vh;
 	text-align: center;
 	width: 100%;
 	height: 4vh;
 }
-
 .market-page {
 	width: 100%;
 	height: 100vh;
@@ -290,21 +315,13 @@ nav {
 	background-color: hsl(0, 0%, 36%);
 	color: white;
 }
-
-.exchange_filter.is-active {
-	background-color: var(--main-blue);
-	color: white;
-}
-
 .exchange_button {
-	background-color: var(--main-blue);
 	width: 100%;
 	border-radius: 5px;
 	color: white;
 }
-.exchange_button:hover,
-.connect_wallet_button:hover {
-	border: 2px solid black;
+.exchange_filter.is-active {
+	background-color: var(--main-blue);
 	color: white;
 }
 #connect_wallet {
@@ -317,7 +334,7 @@ nav {
 .exchange_app {
 	width: 350px;
 	padding: 20px;
-	background-color: #dbdada;
+	background-color: var(--gray-element);
 	border-radius: 10px;
 	box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
@@ -412,7 +429,7 @@ nav {
 .logContainer {
 	margin-top: 15vh;
 	text-align: center;
-	background-color: #dbdada;
+	background-color: var(--gray-element);
 	box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 	padding: 10px;
 	width: 30%;

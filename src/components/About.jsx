@@ -1,4 +1,6 @@
 import React from 'react';
+import { Button } from 'react-bootstrap';
+import logoText from '../logoText.svg';
 
 export const About = () => {
 	return (
@@ -7,12 +9,13 @@ export const About = () => {
 				<img src="https://i.ibb.co/23tM3w6/Logo.png" alt="Logo with Title" className="full-logo"></img>
 			</div>
 			<div className="right">
-				<div>
-					<h3>Welcome to PunySwap</h3>
-					<h5>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis odit, itaque, quisquam rem molestias nesciunt corporis iure, delectus dolorem illo neque officiis expedita error aut ipsam ipsa praesentium! Saepe, sunt.</h5>
-					<a href="http://localhost:3000/signup" className="btn">
-						Get Started
-					</a>
+				<div id="about_cont">
+					<h3 id="about_cont_title">Welcome to</h3>
+					<img id="logo_text" src={logoText} alt="" />
+					<p id="about_cont_body">A uniswap clone that allows you to send and swap crypto currencies! We provide services for sending ethereum, or swapping any tokens from 3 of the most popular networks - ETH, BSC, and Polygon. </p>
+					<Button href="/signup" id="about_button">
+						<span>Get Started</span>
+					</Button>
 				</div>
 			</div>
 		</div>
