@@ -5,6 +5,7 @@ import scrollRight from '../scrollRight.png';
 import SwapCard from './SwapCard';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import PropagateLoader from 'react-spinners/PropagateLoader';
+import { usePromiseTracker } from 'react-promise-tracker';
 
 export default function Bookmarks(props) {
 	const [isLoading, setIsLoading] = useState(true);
@@ -85,7 +86,6 @@ export default function Bookmarks(props) {
 		const newData = newerData.map((data, idx) => {
 			return <BookmarkedCard data={data} key={idx} populateChart={populateChart} user={props.user.user.id}></BookmarkedCard>;
 		});
-		setIsLoading(false);
 		return newData;
 	};
 	// const mapDataSwap = (coinData) => {
