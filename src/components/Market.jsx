@@ -4,6 +4,7 @@ import axios from 'axios';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
 export default function Market(props) {
+	const nFormat = new Intl.NumberFormat('en-US');
 	const sortData = (searchData) => {
 		searchData.sort((a, b) => {
 			return b.price - a.price;
@@ -98,28 +99,30 @@ export default function Market(props) {
 				<input type="text" placeholder="Search.." onChange={(e) => searchChange(e)}></input>
 			</div>
 			<div className="card-container">{state.cryptoCardData}</div>
-			<div className="totals-container">
-				<p>Total Crypto: {props.stats.total}</p>
-				<p>Total Market Cap: {props.stats.totalMarketCap}</p>
-				<p>Total Markets: {props.stats.totalMarkets}</p>
-				<p>Total Exchanges: {props.stats.totalExchanges}</p>
-				<p>Total 24hr Volume: {props.stats.total24hVolume}</p>
-			</div>
-			<div className="chart-container">
-				{state.selectedCoin ? <div id='selectedCoin'>{state.selectedCoin}</div> : <></>}
-				<ul className='selectTimeframe'>
-					<li><button className={state.time==="24h"?"clicked":""} onClick={(e)=>changeTimeframe(e, "24h")}>24h</button></li>
-					<li><button className={state.time==="30d"?"clicked":""} onClick={(e)=>changeTimeframe(e, "30d")}>30d</button></li>
-					<li><button className={state.time==="1y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "1y")}>1y</button></li>
-					<li><button className={state.time==="5y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "5y")}>5y</button></li>
-				</ul>
-				<LineChart width={500} height={300} data={state.sparkline} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-					<XAxis dataKey="name"/>
-					<YAxis type="number" domain={['dataMin', 'dataMax']}/>
-					<Tooltip />
-					<Legend />
-					<Line type="monotone" dataKey="Price" stroke="#8884d8" />
-				</LineChart>
+			<div className='data-container'>
+				<div className="chart-container">
+					{state.selectedCoin ? <div id='selectedCoin'>{state.selectedCoin}</div> : <></>}
+					<ul className='selectTimeframe'>
+						<li><button className={state.time==="24h"?"clicked":""} onClick={(e)=>changeTimeframe(e, "24h")}>24h</button></li>
+						<li><button className={state.time==="30d"?"clicked":""} onClick={(e)=>changeTimeframe(e, "30d")}>30d</button></li>
+						<li><button className={state.time==="1y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "1y")}>1y</button></li>
+						<li><button className={state.time==="5y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "5y")}>5y</button></li>
+					</ul>
+					<LineChart width={800} height={200} data={state.sparkline} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+						<XAxis dataKey="name"/>
+						<YAxis type="number" domain={['dataMin', 'dataMax']}/>
+						<Tooltip />
+						<Legend />
+						<Line type="monotone" dataKey="Price" stroke="#8884d8" />
+					</LineChart>
+				</div>
+				<div className="totals-container">
+					<p>Total Crypto: {props.stats.total}</p>
+					<p>Total Market Cap: ${nFormat.format(props.stats.totalMarketCap)}</p>
+					<p>Total Markets: {props.stats.totalMarkets}</p>
+					<p>Total Exchanges: {props.stats.totalExchanges}</p>
+					<p>Total 24hr Volume: {props.stats.total24hVolume}</p>
+				</div>
 			</div>
 		</div>
 	);
