@@ -5,6 +5,7 @@ import CoinRow from './CoinRow';
 import axios from 'axios';
 import favSvg from '../../favorite.svg';
 import favSvgBdr from '../../favorite_border.svg';
+import Swal from 'sweetalert2';
 const { ethereum } = window;
 // require('dotenv').config();
 
@@ -123,7 +124,7 @@ export default function Swap(props) {
 	}
 	async function trySwap() {
 		if (currentTradeFrom.address === currentTradeTo.address) {
-			alert('Cannot swap between same coin!');
+			Swal.fire('Cannot swap between same coin!')
 			return;
 		}
 		let address = Moralis.User.current().get('ethAddress');
@@ -174,7 +175,7 @@ export default function Swap(props) {
 			});
 		} catch (error) {
 			console.log(error);
-			alert('Swap Failed');
+			Swal.fire('Swap Failed')
 		}
 	}
 
