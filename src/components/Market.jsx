@@ -2,6 +2,7 @@ import CryptoCard from './CryptoCard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import moment from 'moment';
 
 export default function Market(props) {
 	const nFormat = new Intl.NumberFormat('en-US');
@@ -67,19 +68,23 @@ export default function Market(props) {
 				const currentTime = new Date().getTime();
 				if (time === '24h') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(currentTime - ((((idx+1)/26) * 24) * hour)).toString()}`, Price: num, dataMin: min, dataMax: max }; //current hour ms - % of a day ms
+						let date =  new Date(currentTime - ((((26-idx)/26) * 24) * hour)).toString()
+						return { name: `${moment(date).format('lll')}`, Price: num, dataMin: min, dataMax: max }; //current hour ms - % of a day ms
 					});
 				} else if (time === '30d') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(currentTime / day - (idx + (1 / 26) * 30) * month).toString()}`, Price: num, dataMin: min, dataMax: max };
+						let date = new Date(currentTime - ((((26-idx)/26) * 30) * day)).toString()
+						return { name: `${moment(date).format('lll')}`, Price: num, dataMin: min, dataMax: max };
 					});
 				} else if (time === '1y') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(currentTime / month - (idx + (1 / 26) * 12) * year).toString()}`, Price: num, dataMin: min, dataMax: max };
+						let date = new Date(currentTime - ((((26-idx)/26) * 12) * month)).toString()
+						return { name: `${moment(date).format('lll')}`, Price: num, dataMin: min, dataMax: max };
 					});
 				} else if (time === '5y') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(currentTime / year - (idx + (1 / 26) * 60) * (year * 5)).toString()}`, Price: num, dataMin: min, dataMax: max };
+						let date = new Date(currentTime - ((((26-idx)/26) * 5) * year)).toString()
+						return { name: `${moment(date).format('lll')}`, Price: num, dataMin: min, dataMax: max };
 					});
 				}
 
