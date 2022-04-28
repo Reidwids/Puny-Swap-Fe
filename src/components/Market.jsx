@@ -40,8 +40,10 @@ export default function Market(props) {
 		}
 	};
 
-	const populateChart = (e, symbol, time, name) => {
-		e.preventDefault();
+	const populateChart = (e, symbol, name, time) => {
+		if(e !== undefined){
+			e.preventDefault();
+		}
 		let parameters = {
 			symbol: symbol,
 			time: time,
@@ -57,21 +59,29 @@ export default function Market(props) {
 				const max = Math.max(...convertedData)
 				
 				const sparkline = convertedData.map((num, idx) => {
-					return { name: `Unit ${idx}`, Price: num, dataMin: min, dataMax: max };
+					return { name: `${idx}`, Price: num, dataMin: min, dataMax: max };
 				});
-				setState({ ...state, sparkline: sparkline, selectedCoin: result.data.data.coins[0].name });
+				setState({ ...state, sparkline: sparkline, selectedCoin: result.data.data.coins[0].name, selectedSymbol: result.data.data.coins[0].symbol, time: time });
 			})
 			.catch((err) => {
 				console.log(err);
 			});
 	};
 
+
+	const changeTimeframe = (e, time)=>{
+		e.preventDefault()
+		populateChart(undefined, state.selectedSymbol, state.selectedCoin, time)
+	}
+
 	const [state, setState] = useState({
 		sparkline: [],
 		selectedCoin: null,
+		selectedSymbol: null,
 		displayedCoins: null,
 		initialLoad: true,
 		cryptoCardData: [],
+		time: "24h"
 	});
 
 	useEffect(() => {
@@ -97,6 +107,12 @@ export default function Market(props) {
 			</div>
 			<div className="chart-container">
 				{state.selectedCoin ? <div id='selectedCoin'>{state.selectedCoin}</div> : <></>}
+				<ul className='selectTimeframe'>
+					<li><button className={state.time==="24h"?"clicked":""} onClick={(e)=>changeTimeframe(e, "24h")}>24h</button></li>
+					<li><button className={state.time==="30d"?"clicked":""} onClick={(e)=>changeTimeframe(e, "30d")}>30d</button></li>
+					<li><button className={state.time==="1y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "1y")}>1y</button></li>
+					<li><button className={state.time==="5y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "5y")}>5y</button></li>
+				</ul>
 				<LineChart width={500} height={300} data={state.sparkline} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
 					<XAxis dataKey="name"/>
 					<YAxis type="number" domain={['dataMin', 'dataMax']}/>
