@@ -1,11 +1,13 @@
 import BookmarkedCard from './BookmarkedCard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { LineChart, Line } from 'recharts';
 import scrollRight from '../scrollRight.png';
 import SwapCard from './SwapCard';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import PropagateLoader from 'react-spinners/PropagateLoader';
 
 export default function Bookmarks(props) {
+	const [isLoading, setIsLoading] = useState(true);
 	const ele = document.getElementById('bookmark-cont');
 	let pos = { top: 0, left: 0, x: 0, y: 0 };
 
@@ -83,6 +85,7 @@ export default function Bookmarks(props) {
 		const newData = newerData.map((data, idx) => {
 			return <BookmarkedCard data={data} key={idx} populateChart={populateChart} user={props.user.user.id}></BookmarkedCard>;
 		});
+		setIsLoading(false);
 		return newData;
 	};
 	// const mapDataSwap = (coinData) => {
@@ -115,6 +118,17 @@ export default function Bookmarks(props) {
 				console.log(err);
 			});
 	};
+	const removeSwapRecord = (crypto1, crypto2) => {
+		axios
+			.post('removeSwap', { crypto1, crypto2, owner: props.user })
+			.then((result) => {
+				console.log(result);
+				getUserSwaps();
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 
 	const [state, setState] = useState({
 		sparkline: [],
@@ -129,25 +143,35 @@ export default function Bookmarks(props) {
 
 	useEffect(() => {
 		setState({ ...state, displayedCoins: props.coins, initialLoad: false, cryptoCardData: mapDataBookmarks(props.coins) });
+		setIsLoading(false);
 	}, [state.displayedCoins]);
 
-	return (
-		<div className="bookmarks-page">
-			{/* <div className="card-container">{state.cryptoCardData}</div> */}
-			<div id="bookmark-cont" className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
-				{state.cryptoCardData}
-			</div>
-			<div id="swap-cont" className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
-				{state.userSwaps.map((swap, i) => {
-					return <SwapCard key={i} swap={swap}></SwapCard>;
-				})}
-			</div>
-			{/* <div className="chart-container">
+	console.log(isLoading);
+	if (!isLoading) {
+		return (
+			<div className="bookmarks-page">
+				{/* <div className="card-container">{state.cryptoCardData}</div> */}
+				<div id="bookmark-cont" className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
+					{state.cryptoCardData}
+				</div>
+				<div id="swap-cont" className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
+					{state.userSwaps.map((swap, i) => {
+						return <SwapCard removeSwapRecord={removeSwapRecord} key={i} {...swap} user={props.user.user.id}></SwapCard>;
+					})}
+				</div>
+				{/* <div className="chart-container">
 				{state.selectedCoin ? <div>{state.selectedCoin}</div> : <></>}
 				<LineChart width={400} height={400} data={state.sparkline}>
 					<Line type="monotone" dataKey="uv" stroke="#8884d8" />
 				</LineChart>
 			</div> */}
-		</div>
-	);
+			</div>
+		);
+	} else {
+		return (
+			<div className="bookmarks-loader">
+				<PropagateLoader size={15}></PropagateLoader>
+			</div>
+		);
+	}
 }

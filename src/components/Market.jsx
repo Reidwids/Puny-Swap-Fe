@@ -16,7 +16,7 @@ export default function Market(props) {
 			const response = await axios.post('isBookmarked', { crypto: data.symbol, user: props.user.user.id });
 			return Promise.resolve(response);
 		} catch (error) {
-			return null
+			return null;
 		}
 	};
 
@@ -24,7 +24,7 @@ export default function Market(props) {
 		sortData(searchData);
 		const newerData = searchData.map((data, idx) => {
 			const isBookmarked = checkBookmarked(data);
-			return { ...data, isBookmarked};
+			return { ...data, isBookmarked };
 		});
 		const newData = newerData.map((data, idx) => {
 			return <CryptoCard data={data} key={idx} populateChart={populateChart} user={props.user}></CryptoCard>;
@@ -42,8 +42,30 @@ export default function Market(props) {
 	};
 
 	const populateChart = (e, symbol, name, time) => {
-		if(e !== undefined){
+		if (e !== undefined) {
 			e.preventDefault();
+			let parameters = {
+				symbol: symbol,
+				time: time,
+				name: name,
+			};
+			axios
+				.post('coinData', parameters)
+				.then((result) => {
+					const convertedData = result.data.data.coins[0].sparkline.map((str, idx) => {
+						return Math.round(Number(str));
+					});
+					const min = Math.min(...convertedData);
+					const max = Math.max(...convertedData);
+
+					const sparkline = convertedData.map((num, idx) => {
+						return { name: `${idx}`, Price: num, dataMin: min, dataMax: max };
+					});
+					setState({ ...state, sparkline: sparkline, selectedCoin: result.data.data.coins[0].name, selectedSymbol: result.data.data.coins[0].symbol, time: time });
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 		let parameters = {
 			symbol: symbol,
@@ -56,34 +78,31 @@ export default function Market(props) {
 				const convertedData = result.data.data.coins[0].sparkline.map((str, idx) => {
 					return Math.round(Number(str));
 				});
-				const min = Math.min(...convertedData)
-				const max = Math.max(...convertedData)
+				const min = Math.min(...convertedData);
+				const max = Math.max(...convertedData);
 				let sparkline;
 				const minute = 1000 * 60;
 				const hour = minute * 60;
 				const day = hour * 24;
-				const month = day * 30
+				const month = day * 30;
 				const year = day * 365;
-				const time = new Date().getTime()
+				const time = new Date().getTime();
 
-				if (time === "24h"){
+				if (time === '24h') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(((time/hour)-(idx+1/26*24)*day)).toString()}`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(time / hour - (idx + (1 / 26) * 24) * day).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
-				}
-				else if (time === "30d"){
+				} else if (time === '30d') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(((time/day)-(idx+1/26*30)*month)).toString()}`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(time / day - (idx + (1 / 26) * 30) * month).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
-				}
-				else if (time === "1y"){
+				} else if (time === '1y') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(((time/month)-(idx+1/26*12)*year)).toString()}`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(time / month - (idx + (1 / 26) * 12) * year).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
-				}
-				else if (time === "5y"){
+				} else if (time === '5y') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(((time/year)-(idx+1/26*60)*(year*5))).toString()}`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(time / year - (idx + (1 / 26) * 60) * (year * 5)).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
 				}
 
@@ -94,20 +113,12 @@ export default function Market(props) {
 			});
 	};
 
-
-	const changeTimeframe = (e, time)=>{
-		e.preventDefault()
-		populateChart(undefined, state.selectedSymbol, state.selectedCoin, time)
-	}
-
 	const [state, setState] = useState({
 		sparkline: [],
 		selectedCoin: null,
-		selectedSymbol: null,
 		displayedCoins: null,
 		initialLoad: true,
 		cryptoCardData: [],
-		time: "24h"
 	});
 
 	useEffect(() => {
@@ -118,25 +129,40 @@ export default function Market(props) {
 		}
 	}, [state.displayedCoins]);
 
-
 	return (
 		<div className="market-page">
 			<div className="search-container">
 				<input type="text" placeholder="Search.." onChange={(e) => searchChange(e)}></input>
 			</div>
 			<div className="card-container">{state.cryptoCardData}</div>
-			<div className='data-container'>
-				<ul className='selectTimeframe'>
-					<li><button className={state.time==="24h"?"clicked":""} onClick={(e)=>changeTimeframe(e, "24h")}>24h</button></li>
-					<li><button className={state.time==="30d"?"clicked":""} onClick={(e)=>changeTimeframe(e, "30d")}>30d</button></li>
-					<li><button className={state.time==="1y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "1y")}>1y</button></li>
-					<li><button className={state.time==="5y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "5y")}>5y</button></li>
+			<div className="data-container">
+				<ul className="selectTimeframe">
+					<li>
+						<button className={state.time === '24h' ? 'clicked' : ''} onClick={(e) => changeTimeframe(e, '24h')}>
+							24h
+						</button>
+					</li>
+					<li>
+						<button className={state.time === '30d' ? 'clicked' : ''} onClick={(e) => changeTimeframe(e, '30d')}>
+							30d
+						</button>
+					</li>
+					<li>
+						<button className={state.time === '1y' ? 'clicked' : ''} onClick={(e) => changeTimeframe(e, '1y')}>
+							1y
+						</button>
+					</li>
+					<li>
+						<button className={state.time === '5y' ? 'clicked' : ''} onClick={(e) => changeTimeframe(e, '5y')}>
+							5y
+						</button>
+					</li>
 				</ul>
 				<div className="chart-container">
-					{state.selectedCoin ? <div id='selectedCoin'>{state.selectedCoin}</div> : <></>}
+					{state.selectedCoin ? <div id="selectedCoin">{state.selectedCoin}</div> : <></>}
 					<LineChart width={1000} height={200} data={state.sparkline} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-						<XAxis dataKey="name"/>
-						<YAxis type="number" domain={['dataMin', 'dataMax']}/>
+						<XAxis dataKey="name" />
+						<YAxis type="number" domain={['dataMin', 'dataMax']} />
 						<Tooltip />
 						<Legend />
 						<Line type="monotone" dataKey="Price" stroke="#8884d8" />
