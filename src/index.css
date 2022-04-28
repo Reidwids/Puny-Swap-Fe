@@ -42,13 +42,7 @@ nav {
 	z-index: 2;
 }
 
-<<<<<<< HEAD
 footer {
-	width: 100%;
-	height: 50px;
-=======
-footer{
->>>>>>> 25e980a1c0a9aaf5b1ab408beb6acbfa489590f4
 	position: fixed;
 	height: 30px;
 	width: 100%;
@@ -58,7 +52,7 @@ footer{
 	z-index: 2;
 }
 
-footer>ul{
+footer > ul {
 	list-style-type: none;
 	display: flex;
 	justify-content: center;
@@ -244,7 +238,7 @@ footer>ul{
 	grid-gap: 10px; /* even spacing using grid-gap, You can use percentage values if you want*/
 	padding: 10px;
 	height: 77vh;
-	overflow-y:scroll;
+	overflow-y: scroll;
 }
 
 .card-container::-webkit-scrollbar {
@@ -272,7 +266,7 @@ footer>ul{
 	margin-right: 20px;
 }
 
-.selectTimeframe{
+.selectTimeframe {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
@@ -284,26 +278,26 @@ footer>ul{
 	margin-right: 30px;
 }
 
-.selectTimeframe>li{
+.selectTimeframe > li {
 	margin: 10px;
 	font-size: small;
 }
 
-.selectTimeframe>li>button{
+.selectTimeframe > li > button {
 	background-color: rgba(255, 255, 255, 0);
 	border: 0px;
 	text-decoration: underline;
 }
 
-.selectTimeframe>li>button:hover{
+.selectTimeframe > li > button:hover {
 	text-decoration: none;
 }
 
-.clicked{
+.clicked {
 	text-decoration: none !important;
 }
 
-#selectedCoin{
+#selectedCoin {
 	width: 100%;
 	color: black;
 	text-align: center;
