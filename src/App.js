@@ -175,7 +175,9 @@ export default function App() {
 					</Routes>
 					<footer>
 						<ul>
-							<li>Created By: <a href='https://github.com/Reidwids'>Derek Reid-Wilkinson</a> and <a href='https://github.com/BrandonSamaroo'>Brandon Samaroo</a></li>
+							<li>
+								Created By: <a href="https://github.com/Reidwids">Derek Reid-Wilkinson</a> and <a href="https://github.com/BrandonSamaroo">Brandon Samaroo</a>
+							</li>
 						</ul>
 					</footer>
 				</div>

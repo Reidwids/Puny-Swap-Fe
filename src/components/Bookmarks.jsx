@@ -146,7 +146,6 @@ export default function Bookmarks(props) {
 		setState({ ...state, displayedCoins: props.coins, initialLoad: false, cryptoCardData: mapDataBookmarks(props.coins) });
 		setIsLoading(false);
 	}, [state.displayedCoins]);
-
 	if (!promiseInProgress) {
 		return (
 			<div className="bookmarks-page">
