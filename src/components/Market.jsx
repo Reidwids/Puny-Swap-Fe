@@ -15,7 +15,7 @@ export default function Market(props) {
 			const response = await axios.post('isBookmarked', { crypto: data.symbol, user: props.user.user.id });
 			return Promise.resolve(response);
 		} catch (error) {
-			return null
+			return null;
 		}
 	};
 
@@ -23,7 +23,7 @@ export default function Market(props) {
 		sortData(searchData);
 		const newerData = searchData.map((data, idx) => {
 			const isBookmarked = checkBookmarked(data);
-			return { ...data, isBookmarked};
+			return { ...data, isBookmarked };
 		});
 		const newData = newerData.map((data, idx) => {
 			return <CryptoCard data={data} key={idx} populateChart={populateChart} user={props.user}></CryptoCard>;
@@ -41,47 +41,39 @@ export default function Market(props) {
 	};
 
 	const populateChart = (e, symbol, name, time) => {
-		if(e !== undefined){
+		if (e !== undefined) {
 			e.preventDefault();
+			let parameters = {
+				symbol: symbol,
+				time: time,
+				name: name,
+			};
+			axios
+				.post('coinData', parameters)
+				.then((result) => {
+					const convertedData = result.data.data.coins[0].sparkline.map((str, idx) => {
+						return Math.round(Number(str));
+					});
+					const min = Math.min(...convertedData);
+					const max = Math.max(...convertedData);
+
+					const sparkline = convertedData.map((num, idx) => {
+						return { name: `${idx}`, Price: num, dataMin: min, dataMax: max };
+					});
+					setState({ ...state, sparkline: sparkline, selectedCoin: result.data.data.coins[0].name, selectedSymbol: result.data.data.coins[0].symbol, time: time });
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
-		let parameters = {
-			symbol: symbol,
-			time: time,
-			name: name,
-		};
-		axios
-			.post('coinData', parameters)
-			.then((result) => {
-				const convertedData = result.data.data.coins[0].sparkline.map((str, idx) => {
-					return Math.round(Number(str));
-				});
-				const min = Math.min(...convertedData)
-				const max = Math.max(...convertedData)
-				
-				const sparkline = convertedData.map((num, idx) => {
-					return { name: `${idx}`, Price: num, dataMin: min, dataMax: max };
-				});
-				setState({ ...state, sparkline: sparkline, selectedCoin: result.data.data.coins[0].name, selectedSymbol: result.data.data.coins[0].symbol, time: time });
-			})
-			.catch((err) => {
-				console.log(err);
-			});
 	};
-
-
-	const changeTimeframe = (e, time)=>{
-		e.preventDefault()
-		populateChart(undefined, state.selectedSymbol, state.selectedCoin, time)
-	}
 
 	const [state, setState] = useState({
 		sparkline: [],
 		selectedCoin: null,
-		selectedSymbol: null,
 		displayedCoins: null,
 		initialLoad: true,
 		cryptoCardData: [],
-		time: "24h"
 	});
 
 	useEffect(() => {
@@ -106,16 +98,10 @@ export default function Market(props) {
 				<p>Total 24hr Volume: {props.stats.total24hVolume}</p>
 			</div>
 			<div className="chart-container">
-				{state.selectedCoin ? <div id='selectedCoin'>{state.selectedCoin}</div> : <></>}
-				<ul className='selectTimeframe'>
-					<li><button className={state.time==="24h"?"clicked":""} onClick={(e)=>changeTimeframe(e, "24h")}>24h</button></li>
-					<li><button className={state.time==="30d"?"clicked":""} onClick={(e)=>changeTimeframe(e, "30d")}>30d</button></li>
-					<li><button className={state.time==="1y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "1y")}>1y</button></li>
-					<li><button className={state.time==="5y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "5y")}>5y</button></li>
-				</ul>
+				{state.selectedCoin ? <div id="selectedCoin">{state.selectedCoin}</div> : <></>}
 				<LineChart width={500} height={300} data={state.sparkline} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-					<XAxis dataKey="name"/>
-					<YAxis type="number" domain={['dataMin', 'dataMax']}/>
+					<XAxis dataKey="name" />
+					<YAxis type="number" domain={['dataMin', 'dataMax']} />
 					<Tooltip />
 					<Legend />
 					<Line type="monotone" dataKey="Price" stroke="#8884d8" />

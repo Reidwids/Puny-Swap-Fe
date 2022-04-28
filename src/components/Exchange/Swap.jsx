@@ -198,7 +198,7 @@ export default function Swap(props) {
 		e.preventDefault();
 		e.stopPropagation();
 		axios
-			.post('addSwap', { crypto1: currentTradeFrom.symbol, crypto2: currentTradeTo.symbol, owner: props.user })
+			.post('addSwap', { crypto1: currentTradeFrom.symbol, crypto2: currentTradeTo.symbol, crypto1Img: currentTradeFrom.logoURI, crypto2Img: currentTradeTo.logoURI, owner: props.user })
 			.then((result) => {
 				setFavorite(false);
 			})
