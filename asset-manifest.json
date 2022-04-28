@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/react-gh-pages/static/css/main.0cef7951.css",
+    "main.js": "/react-gh-pages/static/js/main.a0105064.js",
+    "static/js/787.61cae0e7.chunk.js": "/react-gh-pages/static/js/787.61cae0e7.chunk.js",
+    "static/media/logo.svg": "/react-gh-pages/static/media/logo.29749b706819d40bf78d4f657981c872.svg",
+    "static/media/logoNoTitle.svg": "/react-gh-pages/static/media/logoNoTitle.6bd242dee1b6f432043261f13e31afa5.svg",
+    "static/media/logoText.svg": "/react-gh-pages/static/media/logoText.b7dde9a34cf219893d057171c2fbbb93.svg",
+    "index.html": "/react-gh-pages/index.html",
+    "static/media/favorite_border.svg": "/react-gh-pages/static/media/favorite_border.12f3de7ec214e5d39ce23734ab63439a.svg",
+    "static/media/chevRight.svg": "/react-gh-pages/static/media/chevRight.c38ee2a247418516f61a12d9ab7db045.svg",
+    "static/media/favorite.svg": "/react-gh-pages/static/media/favorite.8331c61345f1c821056f2ceb0edfe911.svg",
+    "main.0cef7951.css.map": "/react-gh-pages/static/css/main.0cef7951.css.map",
+    "main.a0105064.js.map": "/react-gh-pages/static/js/main.a0105064.js.map",
+    "787.61cae0e7.chunk.js.map": "/react-gh-pages/static/js/787.61cae0e7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0cef7951.css",
+    "static/js/main.a0105064.js"
+  ]
+}
