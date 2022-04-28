@@ -58,10 +58,32 @@ export default function Market(props) {
 				});
 				const min = Math.min(...convertedData)
 				const max = Math.max(...convertedData)
-				
-				const sparkline = convertedData.map((num, idx) => {
-					return { name: `${idx}`, Price: num, dataMin: min, dataMax: max };
-				});
+				let sparkline;
+
+				if (time === "24h"){
+					const d = new Date();
+					let time = d.getTime();
+					console.log(time)
+					sparkline = convertedData.map((num, idx) => {
+						return { name: `${idx}h`, Price: num, dataMin: min, dataMax: max };
+					});
+				}
+				else if (time === "30d"){
+					sparkline = convertedData.map((num, idx) => {
+						return { name: `${idx}d`, Price: num, dataMin: min, dataMax: max };
+					});
+				}
+				else if (time === "1y"){
+					sparkline = convertedData.map((num, idx) => {
+						return { name: `${idx}m`, Price: num, dataMin: min, dataMax: max };
+					});
+				}
+				else if (time === "5y"){
+					sparkline = convertedData.map((num, idx) => {
+						return { name: `${idx}m`, Price: num, dataMin: min, dataMax: max };
+					});
+				}
+
 				setState({ ...state, sparkline: sparkline, selectedCoin: result.data.data.coins[0].name, selectedSymbol: result.data.data.coins[0].symbol, time: time });
 			})
 			.catch((err) => {
@@ -93,6 +115,7 @@ export default function Market(props) {
 		}
 	}, [state.displayedCoins]);
 
+
 	return (
 		<div className="market-page">
 			<div className="search-container">
@@ -100,15 +123,15 @@ export default function Market(props) {
 			</div>
 			<div className="card-container">{state.cryptoCardData}</div>
 			<div className='data-container'>
+				<ul className='selectTimeframe'>
+					<li><button className={state.time==="24h"?"clicked":""} onClick={(e)=>changeTimeframe(e, "24h")}>24h</button></li>
+					<li><button className={state.time==="30d"?"clicked":""} onClick={(e)=>changeTimeframe(e, "30d")}>30d</button></li>
+					<li><button className={state.time==="1y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "1y")}>1y</button></li>
+					<li><button className={state.time==="5y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "5y")}>5y</button></li>
+				</ul>
 				<div className="chart-container">
 					{state.selectedCoin ? <div id='selectedCoin'>{state.selectedCoin}</div> : <></>}
-					<ul className='selectTimeframe'>
-						<li><button className={state.time==="24h"?"clicked":""} onClick={(e)=>changeTimeframe(e, "24h")}>24h</button></li>
-						<li><button className={state.time==="30d"?"clicked":""} onClick={(e)=>changeTimeframe(e, "30d")}>30d</button></li>
-						<li><button className={state.time==="1y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "1y")}>1y</button></li>
-						<li><button className={state.time==="5y"?"clicked":""} onClick={(e)=>changeTimeframe(e, "5y")}>5y</button></li>
-					</ul>
-					<LineChart width={800} height={200} data={state.sparkline} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+					<LineChart width={1000} height={200} data={state.sparkline} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
 						<XAxis dataKey="name"/>
 						<YAxis type="number" domain={['dataMin', 'dataMax']}/>
 						<Tooltip />
