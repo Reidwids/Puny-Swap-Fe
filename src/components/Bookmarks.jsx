@@ -9,14 +9,19 @@ export default function Bookmarks(props) {
 	const ele = document.getElementById('bookmark-cont');
 	let pos = { top: 0, left: 0, x: 0, y: 0 };
 
-	// const getUserSwaps = async () => {
-	// 	try {
-	// 		const response = await axios.get('userSwaps', { user: props.user.user.id });
-	// 		return Promise.resolve(response);
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 	}
-	// };
+	const getUserSwaps = async () => {
+		axios
+			.get(`userSwaps?userId=${props.user.user.id}`)
+			.then((response) => {
+				setState({ ...state, userSwaps: response.data });
+				// return response.data.map((swap) => {
+				// 	return <SwapCard swap={swap}></SwapCard>;
+				// });
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
 	const handleScroll = (e) => {
 		const bottom = e.target.scrollWidth - e.target.scrollLeft === e.target.clientWidth;
 		if (bottom) {
@@ -118,10 +123,12 @@ export default function Bookmarks(props) {
 		cryptoCardData: [],
 		userSwaps: [],
 	});
+	useEffect(() => {
+		getUserSwaps();
+	}, []);
 
 	useEffect(() => {
 		setState({ ...state, displayedCoins: props.coins, initialLoad: false, cryptoCardData: mapDataBookmarks(props.coins) });
-		// userSwaps: getUserSwaps()
 	}, [state.displayedCoins]);
 
 	return (
@@ -131,9 +138,9 @@ export default function Bookmarks(props) {
 				{state.cryptoCardData}
 			</div>
 			<div id="swap-cont" className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
-				{/* {state.userSwaps.map((swap) => (
-					<SwapCard swap={swap}></SwapCard>
-				))} */}
+				{state.userSwaps.map((swap, i) => {
+					return <SwapCard key={i} swap={swap}></SwapCard>;
+				})}
 			</div>
 			{/* <div className="chart-container">
 				{state.selectedCoin ? <div>{state.selectedCoin}</div> : <></>}

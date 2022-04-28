@@ -40,22 +40,20 @@ export default function BookmarkedCard(props) {
 							<div className="circle-tile-title">{props.data.symbol}</div>
 							<div className="circle-tile-description">
 								<div className="card-value">
-									<div className="card-num-label">Price (USD)</div>
-									<div className="card-num">${nFormat.format(Number(props.data.price).toFixed(2))}</div>
+									<div className="card-num">${nFormat.format(Number(props.data.price).toFixed(2))} USD</div>
 								</div>
 								<div className="card-value">
 									<div className="card-num-label">Market Cap</div>
 									<div className="card-num">${nFormat.format(props.data.marketCap)}</div>
 								</div>
 								<div className="card-value">
-									<div className="card-num-label">Daily Change</div>
 									<div className="card-num" style={props.data.change >= 0 ? { color: 'rgb(113, 168, 29)' } : { color: 'red' }}>
-										{props.data.change >= 0 ? '↑' : '↓'}&nbsp;${nFormat.format(props.data.change)}
+										{props.data.change >= 0 ? '↑' : '↓'}&nbsp;${nFormat.format(props.data.change)} (day)
 									</div>
 								</div>
 							</div>
 							<div className="circle-tile-footer" onClick={(e) => removeFromFavorites(e, props.data.symbol)}>
-								UnFav <img src={favSvg} alt="favorite" />
+								<img src={favSvg} alt="favorite" />
 							</div>
 						</div>
 					</div>
