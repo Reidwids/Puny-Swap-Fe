@@ -59,28 +59,31 @@ export default function Market(props) {
 				const min = Math.min(...convertedData)
 				const max = Math.max(...convertedData)
 				let sparkline;
+				const minute = 1000 * 60;
+				const hour = minute * 60;
+				const day = hour * 24;
+				const month = day * 30
+				const year = day * 365;
+				const time = new Date().getTime()
 
 				if (time === "24h"){
-					const d = new Date();
-					let time = d.getTime();
-					console.log(time)
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${idx}h`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(((time/hour)-(idx+1/26*24)*day)).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
 				}
 				else if (time === "30d"){
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${idx}d`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(((time/day)-(idx+1/26*30)*month)).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
 				}
 				else if (time === "1y"){
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${idx}m`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(((time/month)-(idx+1/26*12)*year)).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
 				}
 				else if (time === "5y"){
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${idx}m`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(((time/year)-(idx+1/26*60)*(year*5))).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
 				}
 
