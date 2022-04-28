@@ -65,20 +65,19 @@ export default function Market(props) {
 				const month = day * 30;
 				const year = day * 365;
 				const currentTime = new Date().getTime();
-
-				if (currentTime === '24h') {
+				if (time === '24h') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(currentTime / hour - (idx + (1 / 26) * 24) * day).toString()}`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(currentTime - ((((idx+1)/26) * 24) * hour)).toString()}`, Price: num, dataMin: min, dataMax: max }; //current hour ms - % of a day ms
 					});
-				} else if (currentTime === '30d') {
+				} else if (time === '30d') {
 					sparkline = convertedData.map((num, idx) => {
 						return { name: `${new Date(currentTime / day - (idx + (1 / 26) * 30) * month).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
-				} else if (currentTime === '1y') {
+				} else if (time === '1y') {
 					sparkline = convertedData.map((num, idx) => {
 						return { name: `${new Date(currentTime / month - (idx + (1 / 26) * 12) * year).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
-				} else if (currentTime === '5y') {
+				} else if (time === '5y') {
 					sparkline = convertedData.map((num, idx) => {
 						return { name: `${new Date(currentTime / year - (idx + (1 / 26) * 60) * (year * 5)).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
