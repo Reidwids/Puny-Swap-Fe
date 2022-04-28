@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 
 import { contractABI, contractAddress } from '../utils/constants';
+import Swal from 'sweetalert2';
 
 export const TransactionContext = React.createContext();
 
@@ -27,7 +28,7 @@ export const TransactionProvider = ({ children }) => {
 
 	const checkIfWalletIsConnected = async () => {
 		try {
-			if (!ethereum) return alert('Please install metamask');
+			if (!ethereum) return Swal.fire('Please install metamask')
 			const accounts = await ethereum.request({ method: 'eth_accounts' });
 			if (accounts.length) {
 				setCurrentAccount(accounts[0]);
@@ -42,7 +43,7 @@ export const TransactionProvider = ({ children }) => {
 
 	const connectWallet = async () => {
 		try {
-			if (!ethereum) return alert('Please install metamask');
+			if (!ethereum) return Swal.fire('Please install metamask')
 			const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
 
 			setCurrentAccount(accounts[0]);
@@ -56,7 +57,7 @@ export const TransactionProvider = ({ children }) => {
 
 	const sendTransaction = async () => {
 		try {
-			if (!ethereum) return alert('Please install metamask');
+			if (!ethereum) return Swal.fire('Please install metamask')
 			const { addressTo, amount, keyword, message } = formData;
 			const transactionContract = getEthereumContract();
 			console.log(formData);
@@ -85,7 +86,13 @@ export const TransactionProvider = ({ children }) => {
 			await transactionHash.wait();
 			setIsLoading(false);
 			console.log(`Success - ${transactionHash.hash}`);
-			alert('Eth sent successfully!');
+			Swal.fire({
+				position: 'center',
+				icon: 'success',
+				title: 'Sucess',
+				showConfirmButton: false,
+				timer: 1500
+			  })
 
 			// const transactionCount = await transactionContract.getTransactionCount();
 			// setTransactionCount(transactionCount.toNumber());

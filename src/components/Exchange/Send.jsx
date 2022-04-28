@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { TransactionContext } from '../../context/TransactionContext';
 import { Form, Button } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 
 export default function Send() {
 	// const { sendTransaction, connectWallet, currentAccount, formData, handleChange, setFormData } = useContext(TransactionContext);
@@ -12,7 +13,7 @@ export default function Send() {
 		if (addressTo.toLowerCase() !== currentAccount) {
 			sendTransaction(formData);
 		} else {
-			alert("Can't send to the same account");
+			Swal.fire("Can't send to the same account");
 		}
 	};
 	return (
