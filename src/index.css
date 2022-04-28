@@ -39,6 +39,15 @@ nav {
 	position: fixed;
 	top: 0;
 	background-color: rgb(218, 218, 218);
+	z-index: 2;
+}
+
+footer{
+	width: 100%;
+	height: 50px;
+	position: fixed;
+	bottom: 0;
+	background-color: rgb(218, 218, 218);
 }
 
 .nav-bar {
@@ -173,7 +182,7 @@ nav {
 }
 .market-page {
 	width: 100%;
-	height: 100vh;
+	height: 92vh;
 	padding-top: 8vh;
 	display: grid;
 	grid-template-areas:
@@ -183,6 +192,7 @@ nav {
 		'card card chart'
 		'card card chart'
 		'card card chart';
+	grid-gap: 2%;
 }
 
 .search-container {
@@ -190,17 +200,8 @@ nav {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 15vh;
+	height: 7vh;
 	width: 100%;
-}
-
-.card-container {
-	grid-area: card;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-	height: 100vh;
 }
 
 .totals-container {
@@ -210,7 +211,7 @@ nav {
 	align-items: center;
 	flex-direction: column;
 	width: 100%;
-	height: 40vh;
+	height: 35vh;
 }
 
 .card-container {
@@ -220,16 +221,41 @@ nav {
 	grid-template-columns: repeat(4, 1fr);
 	grid-gap: 10px; /* even spacing using grid-gap, You can use percentage values if you want*/
 	padding: 10px;
+	height: 80vh;
+	overflow-y:scroll;
 }
+
+
+.card-container::-webkit-scrollbar {
+    width: 5px;
+}
+
+.card-container::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
+
+.card-container::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
 
 .chart-container {
 	grid-area: chart;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-direction: column;
 	width: 100%;
 	height: 50vh;
-	background-color: #0f0f44;
+	margin-right: 20px;
+}
+
+.card-container>#selectedCoin{
+	width: 100%;
+	color: black;
+	text-align: center;
 }
 
 .crypto-card {
@@ -534,4 +560,8 @@ nav {
 }
 .card-num-label {
 	font-size: 12px;
+}
+
+#fav{
+	filter: invert(1);
 }

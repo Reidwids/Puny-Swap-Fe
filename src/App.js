@@ -177,6 +177,13 @@ export default function App() {
 			) : (
 				<></>
 			)}
+			<div>
+				<footer>
+					<ul>
+						<li>Footer</li>
+					</ul>
+				</footer>
+			</div>
 		</>
 	);
 }

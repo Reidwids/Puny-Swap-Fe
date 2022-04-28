@@ -1,7 +1,7 @@
 import CryptoCard from './CryptoCard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { LineChart, Line } from 'recharts';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
 export default function Market(props) {
 	const sortData = (searchData) => {
@@ -50,8 +50,14 @@ export default function Market(props) {
 		axios
 			.post('coinData', parameters)
 			.then((result) => {
-				const sparkline = result.data.data.coins[0].sparkline.map((str, idx) => {
-					return { name: `Unit ${idx}`, uv: Math.round(Number(str)), pv: Math.round(Number(str)), amt: Math.round(Number(str)) };
+				const convertedData = result.data.data.coins[0].sparkline.map((str, idx) => {
+					return Math.round(Number(str));
+				});
+				const min = Math.min(...convertedData)
+				const max = Math.max(...convertedData)
+				
+				const sparkline = convertedData.map((num, idx) => {
+					return { name: `Unit ${idx}`, Price: num, dataMin: min, dataMax: max };
 				});
 				setState({ ...state, sparkline: sparkline, selectedCoin: result.data.data.coins[0].name });
 			})
@@ -90,9 +96,13 @@ export default function Market(props) {
 				<p>Total 24hr Volume: {props.stats.total24hVolume}</p>
 			</div>
 			<div className="chart-container">
-				{state.selectedCoin ? <div>{state.selectedCoin}</div> : <></>}
-				<LineChart width={400} height={400} data={state.sparkline}>
-					<Line type="monotone" dataKey="uv" stroke="#8884d8" />
+				{state.selectedCoin ? <div id='selectedCoin'>{state.selectedCoin}</div> : <></>}
+				<LineChart width={500} height={300} data={state.sparkline} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+					<XAxis dataKey="name"/>
+					<YAxis type="number" domain={['dataMin', 'dataMax']}/>
+					<Tooltip />
+					<Legend />
+					<Line type="monotone" dataKey="Price" stroke="#8884d8" />
 				</LineChart>
 			</div>
 		</div>
