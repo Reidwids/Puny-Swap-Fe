@@ -3,11 +3,20 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LineChart, Line } from 'recharts';
 import scrollRight from '../scrollRight.png';
+import SwapCard from './SwapCard';
 
 export default function Bookmarks(props) {
 	const ele = document.getElementById('bookmark-cont');
 	let pos = { top: 0, left: 0, x: 0, y: 0 };
 
+	// const getUserSwaps = async () => {
+	// 	try {
+	// 		const response = await axios.get('userSwaps', { user: props.user.user.id });
+	// 		return Promise.resolve(response);
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
 	const handleScroll = (e) => {
 		const bottom = e.target.scrollWidth - e.target.scrollLeft === e.target.clientWidth;
 		if (bottom) {
@@ -60,7 +69,7 @@ export default function Bookmarks(props) {
 		}
 	};
 
-	const mapData = (coinData) => {
+	const mapDataBookmarks = (coinData) => {
 		sortData(coinData);
 		const newerData = coinData.map((data, idx) => {
 			const isBookmarked = checkBookmarked(data);
@@ -71,7 +80,17 @@ export default function Bookmarks(props) {
 		});
 		return newData;
 	};
-
+	// const mapDataSwap = (coinData) => {
+	// 	sortData(coinData);
+	// 	const newerData = coinData.map((data, idx) => {
+	// 		const isBookmarked = checkBookmarkedSwap(data);
+	// 		return { ...data, isBookmarked };
+	// 	});
+	// 	const newData = newerData.map((data, idx) => {
+	// 		return <BookmarkedCard data={data} key={idx} populateChart={populateChart} user={props.user.user.id}></BookmarkedCard>;
+	// 	});
+	// 	return newData;
+	// };
 	const populateChart = (e, symbol, time, name) => {
 		e.preventDefault();
 		let parameters = {
@@ -97,19 +116,25 @@ export default function Bookmarks(props) {
 		selectedCoin: null,
 		displayedCoins: null,
 		cryptoCardData: [],
+		userSwaps: [],
 	});
 
 	useEffect(() => {
-		setState({ ...state, displayedCoins: props.coins, initialLoad: false, cryptoCardData: mapData(props.coins) });
+		setState({ ...state, displayedCoins: props.coins, initialLoad: false, cryptoCardData: mapDataBookmarks(props.coins) });
+		// userSwaps: getUserSwaps()
 	}, [state.displayedCoins]);
 
 	return (
-		<div className="market-page">
+		<div className="bookmarks-page">
 			{/* <div className="card-container">{state.cryptoCardData}</div> */}
 			<div id="bookmark-cont" className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
 				{state.cryptoCardData}
 			</div>
-			<div id="swap-cont" className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}></div>
+			<div id="swap-cont" className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
+				{/* {state.userSwaps.map((swap) => (
+					<SwapCard swap={swap}></SwapCard>
+				))} */}
+			</div>
 			{/* <div className="chart-container">
 				{state.selectedCoin ? <div>{state.selectedCoin}</div> : <></>}
 				<LineChart width={400} height={400} data={state.sparkline}>

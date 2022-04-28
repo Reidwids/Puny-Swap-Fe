@@ -226,8 +226,6 @@ export default function Swap(props) {
 	};
 	const checkBookmarked = async (address1, address2) => {
 		try {
-			console.log('Trade from: ', address1);
-			console.log('Trade to: ', address2);
 			const response = await axios.post('swapIsBookmarked', { crypto1: address1, crypto2: address2, user: props.user });
 			return Promise.resolve(response);
 		} catch (error) {
