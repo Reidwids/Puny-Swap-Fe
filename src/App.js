@@ -8,6 +8,7 @@ import { Exchange } from './components/Exchange/Exchange';
 import Market from './components/Market';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
+import logoNT from './logoNoTitle.svg';
 
 export default function App() {
 	const [state, setState] = React.useState({
@@ -116,7 +117,7 @@ export default function App() {
 						<ul className="nav-bar">
 							<li className="nav-item">
 								<Link className="nav-link" to="/">
-									<img className="nav-logo" src="https://i.ibb.co/8DLW99t/Logo-No-Title.png" alt="Logo"></img>
+									<img className="nav-logo" src={logoNT} alt="Logo"></img>
 								</Link>
 							</li>
 							<li className="nav-item">

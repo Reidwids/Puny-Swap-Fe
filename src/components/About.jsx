@@ -1,12 +1,13 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import logoText from '../logoText.svg';
+import logo from '../logo.svg';
 
 export const About = () => {
 	return (
 		<div className="content-section" id="about">
 			<div className="left">
-				<img src="https://i.ibb.co/23tM3w6/Logo.png" alt="Logo with Title" className="full-logo"></img>
+				<img src={logo} alt="Logo with Title" className="full-logo"></img>
 			</div>
 			<div className="right">
 				<div id="about_cont">

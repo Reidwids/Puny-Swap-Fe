@@ -6,6 +6,7 @@ import axios from 'axios';
 import favSvg from '../../favorite.svg';
 import favSvgBdr from '../../favorite_border.svg';
 const { ethereum } = window;
+// require('dotenv').config();
 
 export default function Swap(props) {
 	// const serverUrl = process.env.moralisURL;
