@@ -173,17 +173,15 @@ export default function App() {
 						<Route path="/signup" element={<Signup register={registerHandler} />} />
 						<Route path="/" element={<About />} />
 					</Routes>
+					<footer>
+						<ul>
+							<li>Footer</li>
+						</ul>
+					</footer>
 				</div>
 			) : (
 				<></>
 			)}
-			<div>
-				<footer>
-					<ul>
-						<li>Footer</li>
-					</ul>
-				</footer>
-			</div>
 		</>
 	);
 }

@@ -42,7 +42,7 @@ export default function CryptoCard(props) {
 	return (
 		<div className="container ">
 				<div className="circle-tile">
-					<div className="circle-tile-heading" onClick={(e) => props.populateChart(e, props.data.symbol, '24h', props.data.name)}>
+					<div className="circle-tile-heading" onClick={(e) => props.populateChart(e, props.data.symbol, props.data.name, "24h")}>
 						<div className="circle-tile-image-cont">
 							<img className="circle-tile-image" id="card_image" src={props.data.iconUrl} alt="coin"></img>
 						</div>
