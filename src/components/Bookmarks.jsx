@@ -5,13 +5,14 @@ import scrollRight from '../scrollRight.png';
 import SwapCard from './SwapCard';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import PropagateLoader from 'react-spinners/PropagateLoader';
-import { usePromiseTracker } from 'react-promise-tracker';
+import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
+import { Loader } from 'react-promise-loader';
 
 export default function Bookmarks(props) {
 	const [isLoading, setIsLoading] = useState(true);
 	const ele = document.getElementById('bookmark-cont');
 	let pos = { top: 0, left: 0, x: 0, y: 0 };
-
+	const { promiseInProgress } = usePromiseTracker();
 	const getUserSwaps = async () => {
 		axios
 			.get(`userSwaps?userId=${props.user.user.id}`)
@@ -70,8 +71,8 @@ export default function Bookmarks(props) {
 
 	const checkBookmarked = async (data) => {
 		try {
-			const response = await axios.post('isBookmarked', { crypto: data.symbol, user: props.user.user.id });
-			return Promise.resolve(response);
+			const response = await trackPromise(axios.post('isBookmarked', { crypto: data.symbol, user: props.user.user.id }));
+			return response;
 		} catch (error) {
 			console.log(error);
 		}
@@ -146,8 +147,7 @@ export default function Bookmarks(props) {
 		setIsLoading(false);
 	}, [state.displayedCoins]);
 
-	console.log(isLoading);
-	if (!isLoading) {
+	if (!promiseInProgress) {
 		return (
 			<div className="bookmarks-page">
 				{/* <div className="card-container">{state.cryptoCardData}</div> */}
@@ -169,8 +169,25 @@ export default function Bookmarks(props) {
 		);
 	} else {
 		return (
-			<div className="bookmarks-loader">
-				<PropagateLoader size={15}></PropagateLoader>
+			<div className="bookmarks-page">
+				<div className="bookmarks-loader">
+					<PropagateLoader size={15}></PropagateLoader>
+				</div>
+				{/* <div className="card-container">{state.cryptoCardData}</div> */}
+				<div id="bookmark-cont" style={{ display: 'none' }} className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
+					{state.cryptoCardData}
+				</div>
+				<div id="swap-cont" style={{ display: 'none' }} className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
+					{state.userSwaps.map((swap, i) => {
+						return <SwapCard removeSwapRecord={removeSwapRecord} key={i} {...swap} user={props.user.user.id}></SwapCard>;
+					})}
+				</div>
+				{/* <div className="chart-container">
+		{state.selectedCoin ? <div>{state.selectedCoin}</div> : <></>}
+		<LineChart width={400} height={400} data={state.sparkline}>
+			<Line type="monotone" dataKey="uv" stroke="#8884d8" />
+		</LineChart>
+	</div> */}
 			</div>
 		);
 	}
