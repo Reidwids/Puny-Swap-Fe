@@ -44,28 +44,6 @@ export default function Market(props) {
 	const populateChart = (e, symbol, name, time) => {
 		if (e !== undefined) {
 			e.preventDefault();
-			let parameters = {
-				symbol: symbol,
-				time: time,
-				name: name,
-			};
-			axios
-				.post('coinData', parameters)
-				.then((result) => {
-					const convertedData = result.data.data.coins[0].sparkline.map((str, idx) => {
-						return Math.round(Number(str));
-					});
-					const min = Math.min(...convertedData);
-					const max = Math.max(...convertedData);
-
-					const sparkline = convertedData.map((num, idx) => {
-						return { name: `${idx}`, Price: num, dataMin: min, dataMax: max };
-					});
-					setState({ ...state, sparkline: sparkline, selectedCoin: result.data.data.coins[0].name, selectedSymbol: result.data.data.coins[0].symbol, time: time });
-				})
-				.catch((err) => {
-					console.log(err);
-				});
 		}
 		let parameters = {
 			symbol: symbol,
@@ -86,23 +64,23 @@ export default function Market(props) {
 				const day = hour * 24;
 				const month = day * 30;
 				const year = day * 365;
-				const time = new Date().getTime();
+				const currentTime = new Date().getTime();
 
-				if (time === '24h') {
+				if (currentTime === '24h') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(time / hour - (idx + (1 / 26) * 24) * day).toString()}`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(currentTime / hour - (idx + (1 / 26) * 24) * day).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
-				} else if (time === '30d') {
+				} else if (currentTime === '30d') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(time / day - (idx + (1 / 26) * 30) * month).toString()}`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(currentTime / day - (idx + (1 / 26) * 30) * month).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
-				} else if (time === '1y') {
+				} else if (currentTime === '1y') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(time / month - (idx + (1 / 26) * 12) * year).toString()}`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(currentTime / month - (idx + (1 / 26) * 12) * year).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
-				} else if (time === '5y') {
+				} else if (currentTime === '5y') {
 					sparkline = convertedData.map((num, idx) => {
-						return { name: `${new Date(time / year - (idx + (1 / 26) * 60) * (year * 5)).toString()}`, Price: num, dataMin: min, dataMax: max };
+						return { name: `${new Date(currentTime / year - (idx + (1 / 26) * 60) * (year * 5)).toString()}`, Price: num, dataMin: min, dataMax: max };
 					});
 				}
 
@@ -116,10 +94,17 @@ export default function Market(props) {
 	const [state, setState] = useState({
 		sparkline: [],
 		selectedCoin: null,
+		selectedSymbol: null,
 		displayedCoins: null,
 		initialLoad: true,
 		cryptoCardData: [],
+		time: "24h"
 	});
+
+	const changeTimeframe = (e, time)=>{
+		e.preventDefault()
+		populateChart(undefined, state.selectedSymbol, state.selectedCoin, time)
+	}
 
 	useEffect(() => {
 		if (state.initialLoad) {
