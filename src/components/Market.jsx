@@ -1,7 +1,7 @@
 import CryptoCard from './CryptoCard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import moment from 'moment';
 
 export default function Market(props) {
@@ -149,13 +149,15 @@ export default function Market(props) {
 				</ul>
 				<div className="chart-container">
 					{state.selectedCoin ? <div id="selectedCoin">{state.selectedCoin}</div> : <></>}
-					<LineChart width={1000} height={200} data={state.sparkline} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-						<XAxis dataKey="name" />
-						<YAxis type="number" domain={['dataMin', 'dataMax']} />
-						<Tooltip />
-						<Legend />
-						<Line type="monotone" dataKey="Price" stroke="#8884d8" />
-					</LineChart>
+					<ResponsiveContainer width="95%" height={200}>
+						<LineChart data={state.sparkline} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+							<XAxis dataKey="name" />
+							<YAxis type="number" domain={['dataMin', 'dataMax']} />
+							<Tooltip />
+							<Legend />
+							<Line type="monotone" dataKey="Price" stroke="#8884d8" />
+						</LineChart>
+					</ResponsiveContainer>
 				</div>
 				<div className="totals-container">
 					<p>Total Crypto: {props.stats.total}</p>

@@ -262,29 +262,6 @@ footer > ul {
 	height: 47vh;
 	overflow-y: scroll;
 }
-@media screen and (max-width: 1200px){
-	.card-container {
-		grid-template-columns: repeat(4, 1fr);
-	}
-}
-@media screen and (max-width: 900px){
-	.card-container {
-		grid-template-columns: repeat(3, 1fr);
-	}
-}
-@media screen and (max-width: 700px){
-	.card-container {
-		width: 100%;
-		grid-template-columns: repeat(3, 1fr);
-	}
-}
-
-@media screen and (max-width: 550px){
-	.card-container {
-		width: 100%;
-		grid-template-columns: repeat(2, 1fr);
-	}
-}
 
 
 .card-container::-webkit-scrollbar {
@@ -307,9 +284,9 @@ footer > ul {
 	align-items: center;
 	flex-direction: column;
 	height: 35vh;
+	width: 50%;
 	padding: 0;
 	margin: 0;
-	
 }
 
 .selectTimeframe {
@@ -543,6 +520,7 @@ footer > ul {
 	flex: 0 0 auto;
 }
 .scrolling-wrapper {
+	overflow-x: scroll;
 	display: flex;
 	flex-wrap: nowrap;
 	overflow-x: auto;
@@ -653,4 +631,98 @@ footer > ul {
 .swap-card-crypto-img {
 	width: 40px;
 	margin: 10px;
+}
+
+@media screen and (max-width: 1200px){
+	.card-container {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+@media screen and (max-width: 900px){
+	.card-container {
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+@media screen and (max-width: 700px){
+	.card-container {
+		width: 100%;
+		grid-template-columns: repeat(3, 1fr);
+	}
+}
+
+@media screen and (max-width: 550px){
+	.card-container {
+		width: 100%;
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media screen and (max-height: 850px){
+	.totals-container>p{
+		font-size: 10px;
+	}
+}
+
+@media screen and (max-height: 770px){
+	.totals-container>p{
+		font-size: 8px;
+	}
+}
+
+@media screen and (max-width: 600px){
+	.market-page{
+		height: auto;
+	}
+	.chart-container{
+		width: 100%;
+		height: 50vh;
+	}
+	.card-container{
+		width: 90%;
+		height: 50vh;
+	}
+	.data-container{
+		flex-direction: column;
+		height: 600px;
+	}
+	.selectTimeframe {
+		display: flex;
+		flex-direction: row;
+		height: 10vh;
+		width: 90%;
+		justify-content: center;
+		align-items: center;
+		list-style: none;
+		margin-right: 10px;
+	}
+	.selectTimeframe > li {
+		margin-top: 10px;
+		font-size: 10px;
+		text-align: center;
+	}
+	
+	.selectTimeframe > li > button {
+		background-color: hsl(204, 63%, 59%);
+		border: .5px solid rgba(0, 0, 0, 0.158);
+		width: 30px;
+		border-radius: 5px;
+		margin: 10px;
+		color: white;
+		box-shadow: 0px 2px 2px rgba(0,0,0,0.2);
+	}
+	.search-container{
+		z-index: 2;
+		margin-bottom: 20px;
+	}
+	.totals-container{
+		margin-bottom: 5vh;
+	}
+	.footer>ul>li>a{
+		font-size: 8px;
+	}
+}
+@media screen and (max-width: 400px){
+	.totals-container>p{
+		font-size: 6px;
+	}
 }
