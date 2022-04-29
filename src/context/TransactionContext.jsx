@@ -28,7 +28,7 @@ export const TransactionProvider = ({ children }) => {
 
 	const checkIfWalletIsConnected = async () => {
 		try {
-			if (!ethereum) return Swal.fire('Please install metamask')
+			if (!ethereum) return Swal.fire('Please install metamask');
 			const accounts = await ethereum.request({ method: 'eth_accounts' });
 			if (accounts.length) {
 				setCurrentAccount(accounts[0]);
@@ -43,7 +43,7 @@ export const TransactionProvider = ({ children }) => {
 
 	const connectWallet = async () => {
 		try {
-			if (!ethereum) return Swal.fire('Please install metamask')
+			if (!ethereum) return Swal.fire('Please install metamask');
 			const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
 
 			setCurrentAccount(accounts[0]);
@@ -57,7 +57,7 @@ export const TransactionProvider = ({ children }) => {
 
 	const sendTransaction = async () => {
 		try {
-			if (!ethereum) return Swal.fire('Please install metamask')
+			if (!ethereum) return Swal.fire('Please install metamask');
 			const { addressTo, amount, keyword, message } = formData;
 			const transactionContract = getEthereumContract();
 			console.log(formData);
@@ -87,12 +87,10 @@ export const TransactionProvider = ({ children }) => {
 			setIsLoading(false);
 			console.log(`Success - ${transactionHash.hash}`);
 			Swal.fire({
-				position: 'center',
 				icon: 'success',
-				title: 'Sucess',
-				showConfirmButton: false,
-				timer: 1500
-			  })
+				title: 'Success',
+				text: 'Your Eth was successfully sent!',
+			});
 
 			// const transactionCount = await transactionContract.getTransactionCount();
 			// setTransactionCount(transactionCount.toNumber());

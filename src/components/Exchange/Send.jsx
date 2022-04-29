@@ -13,7 +13,11 @@ export default function Send() {
 		if (addressTo.toLowerCase() !== currentAccount) {
 			sendTransaction(formData);
 		} else {
-			Swal.fire("Can't send to the same account");
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: "Can't send to the same account!",
+			});
 		}
 	};
 	return (

@@ -135,7 +135,11 @@ export default function Swap(props) {
 	}
 	async function trySwap() {
 		if (currentTradeFrom.address === currentTradeTo.address) {
-			Swal.fire('Cannot swap between same coin!');
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'Cannot swap between same coin!',
+			});
 			return;
 		}
 		let address = Moralis.User.current().get('ethAddress');
@@ -186,7 +190,11 @@ export default function Swap(props) {
 			});
 		} catch (error) {
 			console.log(error);
-			Swal.fire('Swap Failed');
+			Swal.fire({
+				icon: 'error',
+				title: 'Oh no...',
+				text: 'The swap has failed!',
+			});
 		}
 	}
 
