@@ -28,7 +28,7 @@ This project uses the full MERN stack, HTML, CSS, JavaScript, Bootstrap5, Expres
 
 ## Getting Started
 
-To check out the app, <a href="https://puny-swap-final.herokuapp.com/bookmarks" target="_blank">click here!</a>
+To check out the app, <a href="https://puny-swap-final.herokuapp.com/" target="_blank">click here!</a>
 
 ## Next Steps
 
