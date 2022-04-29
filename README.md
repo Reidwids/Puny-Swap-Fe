@@ -12,13 +12,13 @@
 ![Image of Homescreen](https://i.ibb.co/VTmCmns/image.png)
 
 #### Market
-![Image of Market](https://i.ibb.co/VTmCmns/image.png)
+![Image of Market](https://i.ibb.co/VTNBwb1/image.png)
 
 #### Exchange
-![Image of Market](https://i.ibb.co/VTmCmns/image.png)
+![Image of Market](https://i.ibb.co/s5pgK3Z/image.png)
 
 #### Bookmarks
-![Image of Market](https://i.ibb.co/VTmCmns/image.png)
+![Image of Market](https://i.ibb.co/nrT8zKw/image.png)
 
 <br>
 
