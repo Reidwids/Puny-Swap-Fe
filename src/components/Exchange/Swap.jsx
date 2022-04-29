@@ -6,6 +6,7 @@ import axios from 'axios';
 import favSvg from '../../favorite.svg';
 import favSvgBdr from '../../favorite_border.svg';
 import Swal from 'sweetalert2';
+import { useLocation } from 'react-router-dom';
 const { ethereum } = window;
 // require('dotenv').config();
 
@@ -25,8 +26,13 @@ export default function Swap(props) {
 	const [toAmount, setToAmount] = useState('');
 	const [gasEstimate, setGasEstimate] = useState('');
 	const [side, setSide] = useState();
-	const [chainFilter, setChainFilter] = useState('eth');
+	const [chainFilter, setChainFilter] = useState('');
 	const [favorite, setFavorite] = useState(false);
+	const search = useLocation().search;
+	const crypto1Param = new URLSearchParams(search).get('crypto1');
+	const crypto2Param = new URLSearchParams(search).get('crypto2');
+	const chainFilterParam = new URLSearchParams(search).get('chain');
+	const [cryptoParamsInitialized, setCryptoParamsInitialized] = useState(false);
 
 	async function login() {
 		//fix login so we don't have to login every time we visit page
@@ -49,9 +55,9 @@ export default function Swap(props) {
 				chain: chain,
 				// The blockchain you want to use (eth/bsc/polygon)
 			});
-			setTokensArr(Object.entries(result.tokens));
-			setTokensObj(result.tokens);
 			setDisplayTokens(Object.entries(result.tokens));
+			setTokensObj(result.tokens);
+			setTokensArr(Object.entries(result.tokens));
 		} catch (error) {
 			console.log(error);
 		}
@@ -115,6 +121,11 @@ export default function Swap(props) {
 				Moralis.start({ serverUrl, appId });
 				await Moralis.initPlugins();
 				// await Moralis.enable();
+				if (chainFilterParam) {
+					setChainFilter(chainFilterParam);
+				} else {
+					setChainFilter('eth');
+				}
 				await listAvailableTokens('eth');
 				setInitialized(true);
 			} catch (error) {
@@ -124,7 +135,7 @@ export default function Swap(props) {
 	}
 	async function trySwap() {
 		if (currentTradeFrom.address === currentTradeTo.address) {
-			Swal.fire('Cannot swap between same coin!')
+			Swal.fire('Cannot swap between same coin!');
 			return;
 		}
 		let address = Moralis.User.current().get('ethAddress');
@@ -175,17 +186,27 @@ export default function Swap(props) {
 			});
 		} catch (error) {
 			console.log(error);
-			Swal.fire('Swap Failed')
+			Swal.fire('Swap Failed');
 		}
 	}
 
 	useEffect(() => {
 		init();
 	});
-	// useEffect(() => {
-	// 	console.log(displayTokens);
-	// }, [displayTokens]);
-
+	useEffect(() => {
+		if (initialized) {
+			if (crypto1Param && !cryptoParamsInitialized) {
+				setCryptoParamsInitialized(true);
+				let crypto1 = tokensArr.filter((token) => token[1].symbol == crypto1Param);
+				let crypto2 = tokensArr.filter((token) => token[1].symbol == crypto2Param);
+				if (crypto1.length !== 0 && crypto2 !== 0) {
+					setCurrentTradeFrom(tokensObj[crypto1[0][0]]);
+					setCurrentTradeTo(tokensObj[crypto2[0][0]]);
+					handleSwapBookmark(tokensObj[crypto1[0][0]].symbol, tokensObj[crypto2[0][0]].symbol);
+				}
+			}
+		}
+	});
 	function handleChainFilter(chain) {
 		setChainFilter(chain);
 		listAvailableTokens(chain);
@@ -199,7 +220,7 @@ export default function Swap(props) {
 		e.preventDefault();
 		e.stopPropagation();
 		axios
-			.post('addSwap', { crypto1: currentTradeFrom.symbol, crypto2: currentTradeTo.symbol, crypto1Img: currentTradeFrom.logoURI, crypto2Img: currentTradeTo.logoURI, owner: props.user })
+			.post('addSwap', { crypto1: currentTradeFrom.symbol, crypto2: currentTradeTo.symbol, chain: chainFilter, crypto1Img: currentTradeFrom.logoURI, crypto2Img: currentTradeTo.logoURI, owner: props.user })
 			.then((result) => {
 				setFavorite(false);
 			})

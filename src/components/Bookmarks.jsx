@@ -1,15 +1,12 @@
 import BookmarkedCard from './BookmarkedCard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import scrollRight from '../scrollRight.png';
 import SwapCard from './SwapCard';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import PropagateLoader from 'react-spinners/PropagateLoader';
 import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
-import { Loader } from 'react-promise-loader';
 
 export default function Bookmarks(props) {
-	const [isLoading, setIsLoading] = useState(true);
 	const ele = document.getElementById('bookmark-cont');
 	let pos = { top: 0, left: 0, x: 0, y: 0 };
 	const { promiseInProgress } = usePromiseTracker();
@@ -144,7 +141,6 @@ export default function Bookmarks(props) {
 
 	useEffect(() => {
 		setState({ ...state, displayedCoins: props.coins, initialLoad: false, cryptoCardData: mapDataBookmarks(props.coins) });
-		setIsLoading(false);
 	}, [state.displayedCoins]);
 	if (!promiseInProgress) {
 		return (

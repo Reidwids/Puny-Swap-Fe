@@ -6,8 +6,8 @@ import chevRight from '../chevRight.svg';
 import { Link } from 'react-router-dom';
 
 export default function SwapCard(props) {
-	const [crypto1, setcrypto1] = useState(props.crypto1);
-	const [crypto2, setcrypto2] = useState(props.crypto2);
+	// const [crypto1, setcrypto1] = useState(props.crypto1);
+	// const [crypto2, setcrypto2] = useState(props.crypto2);
 	return (
 		<>
 			<div className="container">
@@ -16,7 +16,7 @@ export default function SwapCard(props) {
 						className="swap-bookmark-header"
 						to={{
 							pathname: `/exchange`,
-							state: { crypto1FromBookmark: crypto1, crypto2FromBookmark: crypto2 },
+							search: `?crypto1=${props.crypto1}&crypto2=${props.crypto2}&chain=${props.chain}`,
 						}}
 					>
 						Swap {props.crypto1} to {props.crypto2}

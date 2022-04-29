@@ -4,9 +4,10 @@ import { Container, Button } from 'react-bootstrap';
 import PropagateLoader from 'react-spinners/PropagateLoader';
 import Swap from './Swap';
 import Send from './Send';
+import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
 
 export function Exchange(props) {
-	const [filter, setFilter] = useState('send');
+	const [filter, setFilter] = useState('swap');
 	const { isLoading, connectWallet, currentAccount } = useContext(TransactionContext);
 
 	const handleFilterClick = (filter) => {
@@ -17,11 +18,11 @@ export function Exchange(props) {
 			<div id="exchange_cont">
 				<Container className="exchange_app">
 					<div className="exchange_filters">
-						<div onClick={() => handleFilterClick('send')} className={filter === 'send' ? 'exchange_filter is-active' : 'exchange_filter'}>
-							Send Eth
-						</div>
 						<div onClick={() => handleFilterClick('swap')} className={filter === 'swap' ? 'exchange_filter is-active' : 'exchange_filter'}>
 							Swap Crypto
+						</div>
+						<div onClick={() => handleFilterClick('send')} className={filter === 'send' ? 'exchange_filter is-active' : 'exchange_filter'}>
+							Send Eth
 						</div>
 					</div>
 					{filter === 'send' ? <Send></Send> : <Swap isLoaded={props.isLoaded} user={props.user.user.id}></Swap>}
