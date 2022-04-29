@@ -232,25 +232,28 @@ footer > ul {
 	border-radius: 4px;
 	box-sizing: border-box;
 }
-
+.search-container {
+	z-index: 5;
+	margin-top: 0px;
+}
 .totals-container {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
-	height: 20vh;
+	height: 150px;
 	border: 0.5px solid #ccc;
 	padding: 10px;
 	border-radius: 10px;
 	box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.3);
-	margin-left: 20px;
 	background-color: hsl(204, 63%, 59%);
 	color: white;
 }
 
-.totals-container > p {
+.totals-container > div {
 	text-align: center;
 	font-size: 12px;
+	margin: 5px;
 }
 
 .card-container {
@@ -284,18 +287,16 @@ footer > ul {
 	flex-direction: column;
 	height: 35vh;
 	width: 50%;
-	padding: 0;
-	margin: 0;
+	margin-bottom: 20px;
+	font-size: 10px;
 }
 
 .selectTimeframe {
 	display: flex;
 	flex-direction: column;
-	height: 35vh;
 	justify-content: center;
 	align-items: center;
 	list-style: none;
-	margin-right: 10px;
 }
 
 .selectTimeframe > li {
@@ -305,15 +306,15 @@ footer > ul {
 
 .selectTimeframe > li > button {
 	background-color: hsl(204, 63%, 59%);
-	border: 0.5px solid rgba(0, 0, 0, 0.158);
 	width: 40px;
 	border-radius: 10px;
 	color: white;
+	border: none;
 	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 .selectTimeframe > li > button:hover {
-	border: 0.5px solid rgb(0, 0, 0);
+	background-color: hsl(204, 63%, 49%);
 }
 
 .clicked {
@@ -324,6 +325,7 @@ footer > ul {
 	width: 100%;
 	color: black;
 	text-align: center;
+	font-size: 15px;
 }
 
 /*-- Exchange --*/
@@ -515,19 +517,35 @@ footer > ul {
 }
 .circle-tile {
 	text-align: center;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 	flex: 0 0 auto;
 }
 .scrolling-wrapper {
 	overflow-x: scroll;
 	display: flex;
 	flex-wrap: nowrap;
-	-webkit-overflow-scrolling: touch;
-	cursor: grab;
+	height: 100%;
+	width: 100%;
 }
-.scrolling-wrapper::-webkit-scrollbar {
+.swap-bookmark-container {
+	display: inline-block;
+}
+/* .scrolling-wrapper::-webkit-scrollbar {
 	display: none;
+} */
+.scrolling-wrapper::-webkit-scrollbar {
+	height: 8px;
 }
+
+.scrolling-wrapper::-webkit-scrollbar-track {
+	border-radius: 15px;
+}
+
+.scrolling-wrapper::-webkit-scrollbar-thumb {
+	border-radius: 15px;
+	cursor: pointer;
+}
+
 .circle-tile-image-cont {
 	border-radius: 100%;
 	color: #ffffff;
@@ -578,13 +596,8 @@ footer > ul {
 	font-size: 14px;
 	font-weight: 500;
 }
-#fav {
-	filter: invert(1);
-}
 /* Swap Bookmarks */
-#swap-cont {
-	margin-top: 20px;
-}
+
 .swap-bookmark {
 	display: flex;
 	flex-direction: column;
@@ -593,7 +606,7 @@ footer > ul {
 	height: 120px;
 	box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 	border-radius: 5px;
-	margin: 10px;
+	margin: 15px 20px 10px 20px;
 }
 .swap-bookmark-header {
 	border-top-left-radius: 5px;
@@ -672,27 +685,18 @@ footer > ul {
 	.market-page {
 		height: auto;
 	}
-	.chart-container {
-		width: 100%;
-		height: 50vh;
-	}
 	.card-container {
 		width: 90%;
 		height: 50vh;
-	}
-	.data-container {
-		flex-direction: column;
-		height: 600px;
 	}
 	.selectTimeframe {
 		display: flex;
 		flex-direction: row;
 		height: 10vh;
-		width: 90%;
+		width: 100%;
 		justify-content: center;
 		align-items: center;
 		list-style: none;
-		margin-right: 10px;
 	}
 	.selectTimeframe > li {
 		margin-top: 10px;
@@ -709,13 +713,6 @@ footer > ul {
 		color: white;
 		box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
 	}
-	.search-container {
-		z-index: 2;
-		margin-bottom: 20px;
-	}
-	.totals-container {
-		margin-bottom: 5vh;
-	}
 	.footer > ul > li > a {
 		font-size: 8px;
 	}
@@ -724,4 +721,23 @@ footer > ul {
 	.totals-container > p {
 		font-size: 6px;
 	}
+}
+.chart-labels {
+	font-size: 8px;
+}
+#footer {
+	display: flex;
+	align-items: center;
+	justify-content: right;
+	font-size: 12px;
+	text-decoration: none;
+	color: black;
+	height: 30px;
+	padding-left: 20px;
+}
+.nameLinks {
+	color: black;
+}
+.footerSVGL {
+	height: 30px;
 }

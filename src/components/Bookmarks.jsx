@@ -1,14 +1,14 @@
 import BookmarkedCard from './BookmarkedCard';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import SwapCard from './SwapCard';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import PropagateLoader from 'react-spinners/PropagateLoader';
 import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
+import useDraggableScroll from 'use-draggable-scroll';
 
 export default function Bookmarks(props) {
-	const ele = document.getElementById('bookmark-cont');
-	let pos = { top: 0, left: 0, x: 0, y: 0 };
+	// let pos = { top: 0, left: 0, x: 0, y: 0 };
 	const { promiseInProgress } = usePromiseTracker();
 	const getUserSwaps = async () => {
 		axios
@@ -23,42 +23,43 @@ export default function Bookmarks(props) {
 				console.log(error);
 			});
 	};
-	const handleScroll = (e) => {
-		const bottom = e.target.scrollWidth - e.target.scrollLeft === e.target.clientWidth;
-		if (bottom) {
-		}
-	};
-	const mouseDownHandler = function (e) {
-		ele.style.cursor = 'grabbing';
-		ele.style.userSelect = 'none';
-		pos = {
-			// The current scroll
-			left: ele.scrollLeft,
-			top: ele.scrollTop,
-			// Get the current mouse position
-			x: e.clientX,
-			y: e.clientY,
-		};
+	// const handleScroll = (e) => {
+	// 	const bottom = e.target.scrollWidth - e.target.scrollLeft === e.target.clientWidth;
+	// 	if (bottom) {
+	// 	}
+	// };
+	// const ele = document.getElementById('bookmark-cont');
+	// const mouseDownHandler = function (e) {
+	// 	ele.style.cursor = 'grabbing';
+	// 	ele.style.userSelect = 'none';
+	// 	pos = {
+	// 		// The current scroll
+	// 		left: ele.scrollLeft,
+	// 		top: ele.scrollTop,
+	// 		// Get the current mouse position
+	// 		x: e.clientX,
+	// 		y: e.clientY,
+	// 	};
 
-		document.addEventListener('mousemove', mouseMoveHandler);
-		document.addEventListener('mouseup', mouseUpHandler);
-	};
-	const mouseMoveHandler = function (e) {
-		// How far the mouse has been moved
-		const dx = e.clientX - pos.x;
-		const dy = e.clientY - pos.y;
+	// 	document.addEventListener('mousemove', mouseMoveHandler);
+	// 	document.addEventListener('mouseup', mouseUpHandler);
+	// };
+	// const mouseMoveHandler = function (e) {
+	// 	// How far the mouse has been moved
+	// 	const dx = e.clientX - pos.x;
+	// 	const dy = e.clientY - pos.y;
 
-		// Scroll the element
-		ele.scrollTop = pos.top - dy;
-		ele.scrollLeft = pos.left - dx;
-	};
-	const mouseUpHandler = function () {
-		document.removeEventListener('mousemove', mouseMoveHandler);
-		document.removeEventListener('mouseup', mouseUpHandler);
+	// 	// Scroll the element
+	// 	ele.scrollTop = pos.top - dy;
+	// 	ele.scrollLeft = pos.left - dx;
+	// };
+	// const mouseUpHandler = function () {
+	// 	document.removeEventListener('mousemove', mouseMoveHandler);
+	// 	document.removeEventListener('mouseup', mouseUpHandler);
 
-		ele.style.cursor = 'grab';
-		ele.style.removeProperty('user-select');
-	};
+	// 	ele.style.cursor = 'grab';
+	// 	ele.style.removeProperty('user-select');
+	// };
 
 	const sortData = (data) => {
 		data.sort((a, b) => {
@@ -86,17 +87,6 @@ export default function Bookmarks(props) {
 		});
 		return newData;
 	};
-	// const mapDataSwap = (coinData) => {
-	// 	sortData(coinData);
-	// 	const newerData = coinData.map((data, idx) => {
-	// 		const isBookmarked = checkBookmarkedSwap(data);
-	// 		return { ...data, isBookmarked };
-	// 	});
-	// 	const newData = newerData.map((data, idx) => {
-	// 		return <BookmarkedCard data={data} key={idx} populateChart={populateChart} user={props.user.user.id}></BookmarkedCard>;
-	// 	});
-	// 	return newData;
-	// };
 	const populateChart = (e, symbol, time, name) => {
 		e.preventDefault();
 		let parameters = {
@@ -145,21 +135,17 @@ export default function Bookmarks(props) {
 	if (!promiseInProgress) {
 		return (
 			<div className="bookmarks-page">
-				{/* <div className="card-container">{state.cryptoCardData}</div> */}
-				<div id="bookmark-cont" className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
+				<h3 style={{ textAlign: 'center' }}>Crypto Bookmarks</h3>
+				<div id="bookmark-cont" className="scrolling-wrapper">
 					{state.cryptoCardData}
 				</div>
-				<div id="swap-cont" className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
+				<br></br>
+				<h3 style={{ textAlign: 'center' }}>Swap Bookmarks</h3>
+				<div id="swap-cont" className="scrolling-wrapper">
 					{state.userSwaps.map((swap, i) => {
 						return <SwapCard removeSwapRecord={removeSwapRecord} key={i} {...swap} user={props.user.user.id}></SwapCard>;
 					})}
 				</div>
-				{/* <div className="chart-container">
-				{state.selectedCoin ? <div>{state.selectedCoin}</div> : <></>}
-				<LineChart width={400} height={400} data={state.sparkline}>
-					<Line type="monotone" dataKey="uv" stroke="#8884d8" />
-				</LineChart>
-			</div> */}
 			</div>
 		);
 	} else {
@@ -168,21 +154,14 @@ export default function Bookmarks(props) {
 				<div className="bookmarks-loader">
 					<PropagateLoader size={15}></PropagateLoader>
 				</div>
-				{/* <div className="card-container">{state.cryptoCardData}</div> */}
-				<div id="bookmark-cont" style={{ display: 'none' }} className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
+				<div id="bookmark-cont" style={{ display: 'none' }} className="scrolling-wrapper">
 					{state.cryptoCardData}
 				</div>
-				<div id="swap-cont" style={{ display: 'none' }} className="scrolling-wrapper" onMouseDown={mouseDownHandler} onScroll={handleScroll}>
+				<div id="swap-cont" style={{ display: 'none' }} className="scrolling-wrapper">
 					{state.userSwaps.map((swap, i) => {
 						return <SwapCard removeSwapRecord={removeSwapRecord} key={i} {...swap} user={props.user.user.id}></SwapCard>;
 					})}
 				</div>
-				{/* <div className="chart-container">
-		{state.selectedCoin ? <div>{state.selectedCoin}</div> : <></>}
-		<LineChart width={400} height={400} data={state.sparkline}>
-			<Line type="monotone" dataKey="uv" stroke="#8884d8" />
-		</LineChart>
-	</div> */}
 			</div>
 		);
 	}

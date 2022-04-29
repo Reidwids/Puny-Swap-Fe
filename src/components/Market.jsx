@@ -68,22 +68,22 @@ export default function Market(props) {
 				const currentTime = new Date().getTime();
 				if (time === '24h') {
 					sparkline = convertedData.map((num, idx) => {
-						let date =  new Date(currentTime - ((((26-idx)/26) * 24) * hour)).toString()
+						let date = new Date(currentTime - ((26 - idx) / 26) * 24 * hour).toString();
 						return { name: `${moment(date).format('lll')}`, Price: num, dataMin: min, dataMax: max }; //current hour ms - % of a day ms
 					});
 				} else if (time === '30d') {
 					sparkline = convertedData.map((num, idx) => {
-						let date = new Date(currentTime - ((((26-idx)/26) * 30) * day)).toString()
+						let date = new Date(currentTime - ((26 - idx) / 26) * 30 * day).toString();
 						return { name: `${moment(date).format('lll')}`, Price: num, dataMin: min, dataMax: max };
 					});
 				} else if (time === '1y') {
 					sparkline = convertedData.map((num, idx) => {
-						let date = new Date(currentTime - ((((26-idx)/26) * 12) * month)).toString()
+						let date = new Date(currentTime - ((26 - idx) / 26) * 12 * month).toString();
 						return { name: `${moment(date).format('lll')}`, Price: num, dataMin: min, dataMax: max };
 					});
 				} else if (time === '5y') {
 					sparkline = convertedData.map((num, idx) => {
-						let date = new Date(currentTime - ((((26-idx)/26) * 5) * year)).toString()
+						let date = new Date(currentTime - ((26 - idx) / 26) * 5 * year).toString();
 						return { name: `${moment(date).format('lll')}`, Price: num, dataMin: min, dataMax: max };
 					});
 				}
@@ -102,13 +102,13 @@ export default function Market(props) {
 		displayedCoins: null,
 		initialLoad: true,
 		cryptoCardData: [],
-		time: "24h"
+		time: '24h',
 	});
 
-	const changeTimeframe = (e, time)=>{
-		e.preventDefault()
-		populateChart(undefined, state.selectedSymbol, state.selectedCoin, time)
-	}
+	const changeTimeframe = (e, time) => {
+		e.preventDefault();
+		populateChart(undefined, state.selectedSymbol, state.selectedCoin, time);
+	};
 
 	useEffect(() => {
 		if (state.initialLoad) {
@@ -117,7 +117,7 @@ export default function Market(props) {
 			setState({ ...state, cryptoCardData: mapData(state.displayedCoins) });
 		}
 	}, [state.displayedCoins]);
-
+	console.log(props.stats);
 	return (
 		<div className="market-page">
 			<div className="search-container">
@@ -154,17 +154,16 @@ export default function Market(props) {
 							<XAxis dataKey="name" />
 							<YAxis type="number" domain={['dataMin', 'dataMax']} />
 							<Tooltip />
-							<Legend />
 							<Line type="monotone" dataKey="Price" stroke="#8884d8" />
 						</LineChart>
 					</ResponsiveContainer>
 				</div>
 				<div className="totals-container">
-					<p>Total Crypto: {props.stats.total}</p>
-					<p>Total Market Cap: ${nFormat.format(props.stats.totalMarketCap)}</p>
-					<p>Total Markets: {props.stats.totalMarkets}</p>
-					<p>Total Exchanges: {props.stats.totalExchanges}</p>
-					<p>Total 24hr Volume: {props.stats.total24hVolume}</p>
+					<div>Total Crypto: {props.stats.total}</div>
+					<div>Market Cap: ${nFormat.format(props.stats.totalMarketCap)}</div>
+					<div>Total Markets: {props.stats.totalMarkets}</div>
+					<div>Total Exchanges: {props.stats.totalExchanges}</div>
+					<div>Total 24hr Volume: {props.stats.total24hVolume}</div>
 				</div>
 			</div>
 		</div>

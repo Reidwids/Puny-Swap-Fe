@@ -9,6 +9,8 @@ import Market from './components/Market';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
 import logoNT from './logoNoTitle.svg';
+import githubSVG from './githubSVG.svg';
+import linkedInSVG from './linkedIn.png';
 
 export default function App() {
 	const [state, setState] = React.useState({
@@ -173,12 +175,23 @@ export default function App() {
 						<Route path="/signup" element={<Signup register={registerHandler} />} />
 						<Route path="/" element={<About />} />
 					</Routes>
-					<footer>
-						<ul>
-							<li>
-								Created By: <a href="https://github.com/Reidwids">Derek Reid-Wilkinson</a> and <a href="https://github.com/BrandonSamaroo">Brandon Samaroo</a>
-							</li>
-						</ul>
+					<footer id="footer">
+						Derek Reid-Wilkinson &nbsp;
+						<a className="nameLinks" href="https://github.com/Reidwids">
+							<img className="footerSVG" src={githubSVG} alt="github Logo"></img>
+						</a>
+						&nbsp;
+						<a className="nameLinks" href="https://www.linkedin.com/in/derek-reid-wilkinson-b20833228/">
+							<img className="footerSVGL" src={linkedInSVG} alt="github Logo"></img>
+						</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Brandon Samaroo&nbsp;
+						<a className="nameLinks" href="https://github.com/BrandonSamaroo">
+							<img className="footerSVG" src={githubSVG} alt="github Logo"></img>
+						</a>
+						&nbsp;
+						<a className="nameLinks" href="https://www.linkedin.com/in/brandonsamaroo/">
+							<img className="footerSVGL" src={linkedInSVG} alt="github Logo"></img>
+						</a>
 					</footer>
 				</div>
 			) : (
