@@ -9,7 +9,7 @@
 ## Screenshots
 
 #### Homepage
-![Image of Homescreen](https://i.imgur.com/7wxiqPf.png)
+![Image of Homescreen](https://i.imgur.com/VJ80yQE.png)
 
 #### Market
 ![Image of Market](https://i.imgur.com/2TT4KYy.png)
