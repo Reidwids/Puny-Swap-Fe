@@ -1,7 +1,7 @@
 import CryptoCard from './CryptoCard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import moment from 'moment';
 
 export default function Market(props) {

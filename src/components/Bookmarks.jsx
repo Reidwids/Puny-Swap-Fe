@@ -1,11 +1,9 @@
 import BookmarkedCard from './BookmarkedCard';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import SwapCard from './SwapCard';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import PropagateLoader from 'react-spinners/PropagateLoader';
 import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
-import useDraggableScroll from 'use-draggable-scroll';
 
 export default function Bookmarks(props) {
 	// let pos = { top: 0, left: 0, x: 0, y: 0 };

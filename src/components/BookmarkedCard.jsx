@@ -1,7 +1,6 @@
 import Axios from 'axios';
 import React, { useEffect } from 'react';
 import favSvg from '../favorite.svg';
-import { Card } from 'react-bootstrap';
 
 export default function BookmarkedCard(props) {
 	const [bookmarked, setBookmarked] = React.useState(false);

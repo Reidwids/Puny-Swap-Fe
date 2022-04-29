@@ -1,6 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Card } from 'react-bootstrap';
+import React from 'react';
 import favSvg from '../favorite.svg';
 import chevRight from '../chevRight.svg';
 import { Link } from 'react-router-dom';
